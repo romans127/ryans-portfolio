@@ -1,7 +1,5 @@
 import {
   MapPin,
-  Mail,
-  Phone,
   GitBranch,
   ExternalLink,
   Brain,
@@ -112,20 +110,6 @@ export default function About() {
                 <MapPin size={13} className="text-[#38bdf8]" />
                 Greater Tucson Area
               </span>
-              <a
-                href="mailto:ryandwatts@gmail.com"
-                className="flex items-center gap-1.5 hover:text-[#38bdf8] transition-colors"
-              >
-                <Mail size={13} className="text-[#38bdf8]" />
-                ryandwatts@gmail.com
-              </a>
-              <a
-                href="tel:5208490082"
-                className="flex items-center gap-1.5 hover:text-[#38bdf8] transition-colors"
-              >
-                <Phone size={13} className="text-[#38bdf8]" />
-                520-849-0082
-              </a>
             </div>
 
             <div className="flex flex-wrap gap-2 pt-1">
@@ -146,10 +130,10 @@ export default function About() {
                 <ExternalLink size={13} /> LinkedIn
               </a>
               <a
-                href="mailto:ryandwatts@gmail.com"
+                href="/contact"
                 className="inline-flex items-center gap-2 px-4 py-1.5 bg-[#38bdf8] text-[#0a0e14] rounded text-xs font-semibold hover:bg-[#7dd3fc] transition-colors"
               >
-                <Mail size={13} /> Get in touch
+                Get in touch
               </a>
             </div>
           </div>

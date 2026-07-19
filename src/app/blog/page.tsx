@@ -88,7 +88,9 @@ export default function Blog() {
           publish.
         </p>
         <a
-          href="mailto:ryandwatts@gmail.com?subject=Newsletter"
+          href="https://linkedin.com/in/ryandwatts"
+          target="_blank"
+          rel="noopener noreferrer"
           className="inline-flex items-center gap-2 px-4 py-2 bg-[#38bdf8] text-[#0a0e14] rounded text-xs font-semibold hover:bg-[#7dd3fc] transition-colors"
         >
           Get notified

@@ -180,10 +180,10 @@ export default function Experience() {
           that needs deep AI and data expertise, let&apos;s talk.
         </p>
         <a
-          href="mailto:ryandwatts@gmail.com"
+          href="/contact"
           className="inline-flex items-center gap-1.5 text-sm text-[#38bdf8] hover:text-[#7dd3fc] transition-colors"
         >
-          ryandwatts@gmail.com <ArrowUpRight size={14} />
+          Get in touch <ArrowUpRight size={14} />
         </a>
       </div>
     </div>

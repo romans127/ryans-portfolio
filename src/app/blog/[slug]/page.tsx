@@ -133,18 +133,20 @@ export default async function PostPage({
           </p>
           <div className="flex gap-3 pt-1">
             <a
-              href="mailto:ryandwatts@gmail.com"
-              className="text-xs text-[#38bdf8] hover:text-[#7dd3fc] transition-colors"
-            >
-              Email
-            </a>
-            <a
               href="https://linkedin.com/in/ryandwatts"
               target="_blank"
               rel="noopener noreferrer"
               className="text-xs text-[#38bdf8] hover:text-[#7dd3fc] transition-colors"
             >
               LinkedIn
+            </a>
+            <a
+              href="https://github.com/romans127"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-xs text-[#38bdf8] hover:text-[#7dd3fc] transition-colors"
+            >
+              GitHub
             </a>
           </div>
         </div>

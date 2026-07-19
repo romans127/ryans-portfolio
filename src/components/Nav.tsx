@@ -52,12 +52,12 @@ export default function Nav() {
           ))}
         </nav>
 
-        <a
-          href="mailto:ryandwatts@gmail.com"
+        <Link
+          href="/contact"
           className="hidden md:inline-flex items-center gap-2 px-4 py-1.5 rounded text-xs font-medium border border-[#38bdf830] text-[#38bdf8] hover:bg-[#38bdf810] transition-all"
         >
           Get in touch
-        </a>
+        </Link>
 
         {/* Mobile menu toggle */}
         <button
@@ -86,12 +86,13 @@ export default function Nav() {
               {link.label}
             </Link>
           ))}
-          <a
-            href="mailto:ryandwatts@gmail.com"
+          <Link
+            href="/contact"
+            onClick={() => setOpen(false)}
             className="text-sm text-[#38bdf8] border-t border-[#1e2d3d] pt-4"
           >
-            ryandwatts@gmail.com
-          </a>
+            Get in touch
+          </Link>
         </div>
       )}
     </header>

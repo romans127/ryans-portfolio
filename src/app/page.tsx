@@ -151,12 +151,12 @@ export default function Home() {
           >
             Career Timeline
           </Link>
-          <a
-            href="mailto:ryandwatts@gmail.com"
+          <Link
+            href="/contact"
             className="text-sm text-[#8b98ac] hover:text-[#38bdf8] transition-colors underline underline-offset-4 decoration-[#1e2d3d] hover:decoration-[#38bdf8]"
           >
-            ryandwatts@gmail.com
-          </a>
+            Get in touch
+          </Link>
         </div>
       </section>
 
@@ -432,12 +432,12 @@ export default function Home() {
           production.
         </p>
         <div className="flex flex-wrap items-center justify-center gap-4 pt-2">
-          <a
-            href="mailto:ryandwatts@gmail.com"
+          <Link
+            href="/contact"
             className="inline-flex items-center gap-2 px-6 py-2.5 bg-[#38bdf8] text-[#0a0e14] rounded text-sm font-semibold hover:bg-[#7dd3fc] transition-colors"
           >
             Get in touch
-          </a>
+          </Link>
           <Link
             href="/about"
             className="text-sm text-[#8b98ac] hover:text-[#38bdf8] transition-colors"
