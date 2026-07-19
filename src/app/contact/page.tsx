@@ -1,26 +1,19 @@
-import { Mail, Phone, MapPin, GitBranch, ExternalLink, ArrowUpRight } from "lucide-react";
+import { GitBranch, ExternalLink, ArrowUpRight } from "lucide-react";
 
 const contactMethods = [
   {
-    icon: Mail,
-    label: "Email",
-    value: "ryandwatts@gmail.com",
-    href: "mailto:ryandwatts@gmail.com",
-    description: "Best for project inquiries and consulting engagements.",
+    icon: ExternalLink,
+    label: "LinkedIn",
+    value: "linkedin.com/in/ryandwatts",
+    href: "https://linkedin.com/in/ryandwatts",
+    description: "Best for project inquiries, roles, and consulting engagements.",
   },
   {
-    icon: Phone,
-    label: "Phone",
-    value: "520-849-0082",
-    href: "tel:5208490082",
-    description: "Available for calls by appointment.",
-  },
-  {
-    icon: MapPin,
-    label: "Location",
-    value: "Greater Tucson Area, AZ",
-    href: null,
-    description: "Open to remote work globally.",
+    icon: GitBranch,
+    label: "GitHub",
+    value: "github.com/romans127",
+    href: "https://github.com/romans127",
+    description: "Open-source work and technical projects.",
   },
 ];
 
@@ -72,55 +65,27 @@ export default function Contact() {
           <div className="space-y-3">
             {contactMethods.map((method) => {
               const Icon = method.icon;
-              const content = (
-                <div className="p-5 rounded-lg border border-[#1e2d3d] bg-[#0f1520] space-y-1.5 card-hover">
-                  <div className="flex items-center gap-2">
-                    <Icon size={14} className="text-[#38bdf8]" />
-                    <span className="text-xs font-mono text-[#4a5568] uppercase tracking-wider">
-                      {method.label}
-                    </span>
-                    {method.href && (
+              return (
+                <a key={method.label} href={method.href} target="_blank" rel="noopener noreferrer">
+                  <div className="p-5 rounded-lg border border-[#1e2d3d] bg-[#0f1520] space-y-1.5 card-hover">
+                    <div className="flex items-center gap-2">
+                      <Icon size={14} className="text-[#38bdf8]" />
+                      <span className="text-xs font-mono text-[#4a5568] uppercase tracking-wider">
+                        {method.label}
+                      </span>
                       <ArrowUpRight
                         size={12}
                         className="text-[#4a5568] ml-auto"
                       />
-                    )}
+                    </div>
+                    <p className="text-sm font-medium text-[#e8edf5]">
+                      {method.value}
+                    </p>
+                    <p className="text-xs text-[#8b98ac]">{method.description}</p>
                   </div>
-                  <p className="text-sm font-medium text-[#e8edf5]">
-                    {method.value}
-                  </p>
-                  <p className="text-xs text-[#8b98ac]">{method.description}</p>
-                </div>
-              );
-
-              return method.href ? (
-                <a key={method.label} href={method.href}>
-                  {content}
                 </a>
-              ) : (
-                <div key={method.label}>{content}</div>
               );
             })}
-          </div>
-
-          {/* Social */}
-          <div className="flex gap-3 pt-2">
-            <a
-              href="https://github.com/romans127"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex-1 p-3 rounded-lg border border-[#1e2d3d] bg-[#0f1520] flex items-center justify-center gap-2 text-xs text-[#8b98ac] hover:border-[#38bdf830] hover:text-[#38bdf8] transition-all card-hover"
-            >
-              <GitBranch size={14} /> GitHub
-            </a>
-            <a
-              href="https://linkedin.com/in/ryandwatts"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex-1 p-3 rounded-lg border border-[#1e2d3d] bg-[#0f1520] flex items-center justify-center gap-2 text-xs text-[#8b98ac] hover:border-[#38bdf830] hover:text-[#38bdf8] transition-all card-hover"
-            >
-              <ExternalLink size={14} /> LinkedIn
-            </a>
           </div>
         </div>
 
@@ -156,15 +121,17 @@ export default function Contact() {
           Ready to build something?
         </h2>
         <p className="text-sm text-[#8b98ac] max-w-md mx-auto leading-relaxed">
-          The best way to reach me is email. I respond to every serious
+          The best way to reach me is LinkedIn. I respond to every serious
           inquiry, typically within 24 hours.
         </p>
         <a
-          href="mailto:ryandwatts@gmail.com"
+          href="https://linkedin.com/in/ryandwatts"
+          target="_blank"
+          rel="noopener noreferrer"
           className="inline-flex items-center gap-2 px-6 py-3 bg-[#38bdf8] text-[#0a0e14] rounded text-sm font-semibold hover:bg-[#7dd3fc] transition-colors"
         >
-          <Mail size={16} />
-          ryandwatts@gmail.com
+          <ExternalLink size={16} />
+          Connect on LinkedIn
         </a>
       </div>
     </div>

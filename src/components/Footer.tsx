@@ -1,5 +1,4 @@
-import Link from "next/link";
-import { GitBranch, ExternalLink, Mail } from "lucide-react";
+import { GitBranch, ExternalLink } from "lucide-react";
 
 export default function Footer() {
   return (
@@ -8,7 +7,7 @@ export default function Footer() {
         <div className="text-center md:text-left">
           <p className="text-sm font-semibold text-[#e8edf5]">Ryan Watts</p>
           <p className="text-xs text-[#8b98ac] mt-1">
-            Principal AI & Data Engineer · Greater Tucson Area
+            Principal AI & Data Engineer
           </p>
         </div>
 
@@ -30,13 +29,6 @@ export default function Footer() {
             aria-label="GitHub"
           >
             <GitBranch size={18} />
-          </a>
-          <a
-            href="mailto:ryandwatts@gmail.com"
-            className="text-[#4a5568] hover:text-[#38bdf8] transition-colors"
-            aria-label="Email"
-          >
-            <Mail size={18} />
           </a>
         </div>
 
