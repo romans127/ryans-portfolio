@@ -5,10 +5,12 @@ import {
   Database,
   Shield,
   TrendingUp,
-  Code2,
   Cloud,
   Brain,
 } from "lucide-react";
+import CountUp from "@/components/CountUp";
+import Reveal from "@/components/Reveal";
+import SkillExplorer from "@/components/SkillExplorer";
 
 const metrics = [
   { label: "Years of Experience", value: "15+", icon: TrendingUp },
@@ -109,111 +111,109 @@ export default function Home() {
   return (
     <div className="max-w-5xl mx-auto px-6 py-16 space-y-24">
       {/* Hero */}
-      <section className="space-y-6 animate-fade-in">
-        <div className="flex items-center gap-2 mb-4">
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#38bdf810] border border-[#38bdf820] text-xs font-mono text-[#38bdf8]">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#38bdf8] animate-pulse" />
-            Available for opportunities
-          </span>
-        </div>
+      <section className="hero-panel p-8 md:p-10 animate-fade-in">
+        <div className="relative space-y-6">
+          <div className="flex items-center gap-2">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#38bdf810] border border-[#38bdf820] text-xs font-mono text-[#38bdf8]">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#38bdf8] animate-pulse" />
+              Available for opportunities
+            </span>
+          </div>
 
-        <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-[#e8edf5] leading-tight">
-          Ryan Watts
-          <span className="block text-2xl md:text-3xl lg:text-4xl font-light text-[#8b98ac] mt-2">
-            Principal AI & Data Engineer
-          </span>
-        </h1>
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight leading-tight">
+            <span className="gradient-text">Ryan Watts</span>
+            <span className="block text-2xl md:text-3xl lg:text-4xl font-light text-[#8b98ac] mt-2">
+              Principal AI & Data Engineer
+            </span>
+          </h1>
 
-        <p className="text-lg text-[#8b98ac] max-w-2xl leading-relaxed">
-          Visionary AI leader with 15+ years architecting transformative systems
-          — from agentic AI platforms to petabyte-scale data infrastructure and
-          real-time cybersecurity intelligence.
-        </p>
+          <p className="text-lg text-[#8b98ac] max-w-2xl leading-relaxed">
+            Visionary AI leader with 15+ years architecting transformative systems
+            — from agentic AI platforms to petabyte-scale data infrastructure and
+            real-time cybersecurity intelligence.
+          </p>
 
-        <p className="text-sm font-mono text-[#4a5568]">
-          Greater Tucson Area · Currently:{" "}
-          <span className="text-[#38bdf8]">
-            Independent AI & Data Engineering Consulting
-          </span>
-        </p>
+          <p className="text-sm font-mono text-[#4a5568]">
+            Greater Tucson Area · Currently:{" "}
+            <span className="text-[#38bdf8]">
+              Independent AI & Data Engineering Consulting
+            </span>
+          </p>
 
-        <div className="flex flex-wrap items-center gap-4 pt-2">
-          <Link
-            href="/about"
-            className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#38bdf8] text-[#0a0e14] rounded text-sm font-semibold hover:bg-[#7dd3fc] transition-colors"
-          >
-            View Full Profile
-            <ArrowRight size={16} />
-          </Link>
-          <Link
-            href="/experience"
-            className="inline-flex items-center gap-2 px-5 py-2.5 border border-[#1e2d3d] text-[#8b98ac] rounded text-sm hover:border-[#38bdf830] hover:text-[#e8edf5] transition-all"
-          >
-            Career Timeline
-          </Link>
-          <Link
-            href="/contact"
-            className="text-sm text-[#8b98ac] hover:text-[#38bdf8] transition-colors underline underline-offset-4 decoration-[#1e2d3d] hover:decoration-[#38bdf8]"
-          >
-            Get in touch
-          </Link>
+          <div className="flex flex-wrap items-center gap-4 pt-2">
+            <Link
+              href="/about"
+              className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#38bdf8] text-[#0a0e14] rounded text-sm font-semibold hover:bg-[#7dd3fc] transition-colors"
+            >
+              View Full Profile
+              <ArrowRight size={16} />
+            </Link>
+            <Link
+              href="/experience"
+              className="inline-flex items-center gap-2 px-5 py-2.5 border border-[#1e2d3d] text-[#8b98ac] rounded text-sm hover:border-[#38bdf830] hover:text-[#e8edf5] transition-all"
+            >
+              Career Timeline
+            </Link>
+            <Link
+              href="/contact"
+              className="text-sm text-[#8b98ac] hover:text-[#38bdf8] transition-colors underline underline-offset-4 decoration-[#1e2d3d] hover:decoration-[#38bdf8]"
+            >
+              Get in touch
+            </Link>
+          </div>
         </div>
       </section>
 
       {/* Metrics */}
       <section className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        {metrics.map((metric) => {
+        {metrics.map((metric, index) => {
           const Icon = metric.icon;
           return (
-            <div
-              key={metric.label}
-              className="p-5 rounded-lg border border-[#1e2d3d] bg-[#0f1520] text-center space-y-2"
-            >
-              <Icon size={18} className="text-[#38bdf8] mx-auto opacity-70" />
-              <div className="text-2xl font-bold font-mono text-[#e8edf5]">
-                {metric.value}
+            <Reveal key={metric.label} delayMs={index * 70}>
+              <div className="h-full p-5 rounded-lg border border-[#1e2d3d] bg-[#0f1520]/90 backdrop-blur-sm text-center space-y-2 card-hover">
+                <Icon size={18} className="text-[#38bdf8] mx-auto opacity-70" />
+                <div className="text-2xl font-bold font-mono text-[#e8edf5]">
+                  <CountUp value={metric.value} />
+                </div>
+                <div className="text-xs text-[#4a5568]">{metric.label}</div>
               </div>
-              <div className="text-xs text-[#4a5568]">{metric.label}</div>
-            </div>
+            </Reveal>
           );
         })}
       </section>
 
       {/* Core Expertise */}
       <section className="space-y-8">
-        <div className="space-y-1">
+        <Reveal className="space-y-1">
           <p className="text-xs font-mono text-[#38bdf8] uppercase tracking-widest">
             Core Expertise
           </p>
-          <h2 className="text-2xl font-bold text-[#e8edf5]">
-            What I build
-          </h2>
-        </div>
+          <h2 className="text-2xl font-bold text-[#e8edf5]">What I build</h2>
+        </Reveal>
         <div className="grid md:grid-cols-2 gap-4">
-          {expertise.map((item) => {
+          {expertise.map((item, index) => {
             const Icon = item.icon;
             return (
-              <div
-                key={item.title}
-                className="card-hover p-6 rounded-lg border border-[#1e2d3d] bg-[#0f1520] space-y-3"
-              >
-                <div className="flex items-center gap-3">
-                  <div className="p-2 rounded-md bg-[#38bdf810] border border-[#38bdf820]">
-                    <Icon size={16} className="text-[#38bdf8]" />
+              <Reveal key={item.title} delayMs={index * 60}>
+                <div className="h-full card-hover p-6 rounded-lg border border-[#1e2d3d] bg-[#0f1520]/90 backdrop-blur-sm space-y-3">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 rounded-md bg-[#38bdf810] border border-[#38bdf820]">
+                      <Icon size={16} className="text-[#38bdf8]" />
+                    </div>
+                    <h3 className="font-semibold text-[#e8edf5]">{item.title}</h3>
                   </div>
-                  <h3 className="font-semibold text-[#e8edf5]">{item.title}</h3>
+                  <p className="text-sm text-[#8b98ac] leading-relaxed">
+                    {item.description}
+                  </p>
+                  <div className="flex flex-wrap gap-2 pt-1">
+                    {item.tags.map((tag) => (
+                      <span key={tag} className="skill-tag">
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
                 </div>
-                <p className="text-sm text-[#8b98ac] leading-relaxed">
-                  {item.description}
-                </p>
-                <div className="flex flex-wrap gap-2 pt-1">
-                  {item.tags.map((tag) => (
-                    <span key={tag} className="skill-tag">
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-              </div>
+              </Reveal>
             );
           })}
         </div>
@@ -221,7 +221,7 @@ export default function Home() {
 
       {/* Recent Work */}
       <section className="space-y-8">
-        <div className="flex items-center justify-between">
+        <Reveal className="flex items-center justify-between">
           <div className="space-y-1">
             <p className="text-xs font-mono text-[#38bdf8] uppercase tracking-widest">
               Career
@@ -234,148 +234,48 @@ export default function Home() {
           >
             Full timeline <ArrowRight size={14} />
           </Link>
-        </div>
+        </Reveal>
         <div className="space-y-3">
-          {recentWork.map((job) => (
-            <div
-              key={job.company}
-              className="card-hover p-5 rounded-lg border border-[#1e2d3d] bg-[#0f1520] flex flex-col md:flex-row md:items-start gap-4"
-            >
-              <div className="md:w-40 shrink-0">
-                <p className="text-xs font-mono text-[#4a5568]">{job.period}</p>
-              </div>
-              <div className="flex-1 space-y-2">
-                <div>
-                  <p className="font-semibold text-[#e8edf5] text-sm">
-                    {job.role}
+          {recentWork.map((job, index) => (
+            <Reveal key={job.company} delayMs={index * 50}>
+              <div className="card-hover p-5 rounded-lg border border-[#1e2d3d] bg-[#0f1520]/90 backdrop-blur-sm flex flex-col md:flex-row md:items-start gap-4">
+                <div className="md:w-40 shrink-0">
+                  <p className="text-xs font-mono text-[#4a5568]">{job.period}</p>
+                </div>
+                <div className="flex-1 space-y-2">
+                  <div>
+                    <p className="font-semibold text-[#e8edf5] text-sm">
+                      {job.role}
+                    </p>
+                    <p className="text-xs text-[#38bdf8]">{job.company}</p>
+                  </div>
+                  <p className="text-sm text-[#8b98ac] leading-relaxed">
+                    {job.summary}
                   </p>
-                  <p className="text-xs text-[#38bdf8]">{job.company}</p>
-                </div>
-                <p className="text-sm text-[#8b98ac] leading-relaxed">
-                  {job.summary}
-                </p>
-                <div className="flex flex-wrap gap-1.5 pt-1">
-                  {job.tags.map((tag) => (
-                    <span key={tag} className="skill-tag">
-                      {tag}
-                    </span>
-                  ))}
+                  <div className="flex flex-wrap gap-1.5 pt-1">
+                    {job.tags.map((tag) => (
+                      <span key={tag} className="skill-tag">
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
                 </div>
               </div>
-            </div>
+            </Reveal>
           ))}
         </div>
       </section>
 
-      {/* Skills Grid */}
-      <section className="space-y-6">
-        <div className="space-y-1">
-          <p className="text-xs font-mono text-[#38bdf8] uppercase tracking-widest">
-            Technical Stack
-          </p>
-          <h2 className="text-2xl font-bold text-[#e8edf5]">Skills</h2>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {[
-            {
-              category: "AI & ML",
-              icon: Brain,
-              skills: [
-                "Agentic AI",
-                "LangChain",
-                "Pydantic",
-                "Machine Learning",
-                "Reinforcement Learning",
-                "LLMs",
-              ],
-            },
-            {
-              category: "Data Engineering",
-              icon: Database,
-              skills: [
-                "Apache Airflow",
-                "Prefect",
-                "Dagster",
-                "Streaming / Batch",
-                "Real-time Pipelines",
-                "Data Warehousing",
-              ],
-            },
-            {
-              category: "Cloud & Infrastructure",
-              icon: Cloud,
-              skills: [
-                "Amazon Web Services",
-                "Google Cloud Platform",
-                "Microsoft Azure",
-                "Kubernetes",
-                "Docker",
-                "Terraform",
-              ],
-            },
-            {
-              category: "Languages",
-              icon: Code2,
-              skills: ["Python", "SQL", "Go"],
-            },
-            {
-              category: "Data Platforms",
-              icon: Database,
-              skills: [
-                "GCP BigQuery",
-                "AWS Redshift",
-                "AWS Athena",
-                "GCP DataStream",
-                "AWS Glue",
-                "Looker",
-              ],
-            },
-            {
-              category: "Security & Compliance",
-              icon: Shield,
-              skills: [
-                "Threat Detection",
-                "Risk Classification",
-                "Microsoft Graph API",
-                "Compliance Automation",
-              ],
-            },
-          ].map((group) => {
-            const Icon = group.icon;
-            return (
-              <div
-                key={group.category}
-                className="p-5 rounded-lg border border-[#1e2d3d] bg-[#0f1520] space-y-3"
-              >
-                <div className="flex items-center gap-2">
-                  <Icon size={14} className="text-[#38bdf8]" />
-                  <p className="text-xs font-mono text-[#8b98ac] uppercase tracking-wider">
-                    {group.category}
-                  </p>
-                </div>
-                <div className="flex flex-wrap gap-2">
-                  {group.skills.map((skill) => (
-                    <span key={skill} className="skill-tag">
-                      {skill}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </section>
+      <SkillExplorer />
 
       {/* Recent Writing */}
       <section className="space-y-8">
-        <div className="flex items-center justify-between">
+        <Reveal className="flex items-center justify-between">
           <div className="space-y-1">
             <p className="text-xs font-mono text-[#38bdf8] uppercase tracking-widest">
               Thinking Out Loud
             </p>
-            <h2 className="text-2xl font-bold text-[#e8edf5]">
-              Recent Writing
-            </h2>
+            <h2 className="text-2xl font-bold text-[#e8edf5]">Recent Writing</h2>
           </div>
           <Link
             href="/blog"
@@ -383,69 +283,72 @@ export default function Home() {
           >
             All posts <ArrowRight size={14} />
           </Link>
-        </div>
+        </Reveal>
         <div className="space-y-3">
-          {posts.map((post) => (
-            <Link
-              key={post.slug}
-              href={`/blog/${post.slug}`}
-              className="card-hover block p-5 rounded-lg border border-[#1e2d3d] bg-[#0f1520] group"
-            >
-              <div className="flex items-start justify-between gap-4">
-                <div className="space-y-1.5 flex-1">
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs font-mono text-[#38bdf8] bg-[#38bdf810] px-2 py-0.5 rounded">
-                      {post.tag}
-                    </span>
-                    <span className="text-xs text-[#4a5568]">
-                      {post.date} · {post.readTime} read
-                    </span>
+          {posts.map((post, index) => (
+            <Reveal key={post.slug} delayMs={index * 50}>
+              <Link
+                href={`/blog/${post.slug}`}
+                className="card-hover block p-5 rounded-lg border border-[#1e2d3d] bg-[#0f1520]/90 backdrop-blur-sm group"
+              >
+                <div className="flex items-start justify-between gap-4">
+                  <div className="space-y-1.5 flex-1">
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs font-mono text-[#38bdf8] bg-[#38bdf810] px-2 py-0.5 rounded">
+                        {post.tag}
+                      </span>
+                      <span className="text-xs text-[#4a5568]">
+                        {post.date} · {post.readTime} read
+                      </span>
+                    </div>
+                    <h3 className="font-semibold text-[#e8edf5] group-hover:text-[#38bdf8] transition-colors">
+                      {post.title}
+                    </h3>
+                    <p className="text-sm text-[#8b98ac] leading-relaxed">
+                      {post.excerpt}
+                    </p>
                   </div>
-                  <h3 className="font-semibold text-[#e8edf5] group-hover:text-[#38bdf8] transition-colors">
-                    {post.title}
-                  </h3>
-                  <p className="text-sm text-[#8b98ac] leading-relaxed">
-                    {post.excerpt}
-                  </p>
+                  <ArrowRight
+                    size={16}
+                    className="text-[#4a5568] group-hover:text-[#38bdf8] group-hover:translate-x-0.5 shrink-0 mt-1 transition-all"
+                  />
                 </div>
-                <ArrowRight
-                  size={16}
-                  className="text-[#4a5568] group-hover:text-[#38bdf8] shrink-0 mt-1 transition-colors"
-                />
-              </div>
-            </Link>
+              </Link>
+            </Reveal>
           ))}
         </div>
       </section>
 
       {/* CTA */}
-      <section className="p-8 rounded-lg border border-[#38bdf820] bg-gradient-to-br from-[#0f1520] to-[#0a0e14] text-center space-y-4">
-        <p className="text-xs font-mono text-[#38bdf8] uppercase tracking-widest">
-          Let&apos;s Work Together
-        </p>
-        <h2 className="text-2xl font-bold text-[#e8edf5]">
-          Building something ambitious?
-        </h2>
-        <p className="text-[#8b98ac] max-w-xl mx-auto text-sm leading-relaxed">
-          I help organizations navigate AI adoption, architect scalable data
-          infrastructure, and ship intelligent systems that actually work in
-          production.
-        </p>
-        <div className="flex flex-wrap items-center justify-center gap-4 pt-2">
-          <Link
-            href="/contact"
-            className="inline-flex items-center gap-2 px-6 py-2.5 bg-[#38bdf8] text-[#0a0e14] rounded text-sm font-semibold hover:bg-[#7dd3fc] transition-colors"
-          >
-            Get in touch
-          </Link>
-          <Link
-            href="/about"
-            className="text-sm text-[#8b98ac] hover:text-[#38bdf8] transition-colors"
-          >
-            Learn more about me →
-          </Link>
-        </div>
-      </section>
+      <Reveal>
+        <section className="p-8 rounded-lg border border-[#38bdf820] bg-gradient-to-br from-[#0f1520] to-[#0a0e14] text-center space-y-4">
+          <p className="text-xs font-mono text-[#38bdf8] uppercase tracking-widest">
+            Let&apos;s Work Together
+          </p>
+          <h2 className="text-2xl font-bold text-[#e8edf5]">
+            Building something ambitious?
+          </h2>
+          <p className="text-[#8b98ac] max-w-xl mx-auto text-sm leading-relaxed">
+            I help organizations navigate AI adoption, architect scalable data
+            infrastructure, and ship intelligent systems that actually work in
+            production.
+          </p>
+          <div className="flex flex-wrap items-center justify-center gap-4 pt-2">
+            <Link
+              href="/contact"
+              className="inline-flex items-center gap-2 px-6 py-2.5 bg-[#38bdf8] text-[#0a0e14] rounded text-sm font-semibold hover:bg-[#7dd3fc] transition-colors"
+            >
+              Get in touch
+            </Link>
+            <Link
+              href="/about"
+              className="text-sm text-[#8b98ac] hover:text-[#38bdf8] transition-colors"
+            >
+              Learn more about me →
+            </Link>
+          </div>
+        </section>
+      </Reveal>
     </div>
   );
 }

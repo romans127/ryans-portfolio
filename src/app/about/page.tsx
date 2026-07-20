@@ -84,13 +84,13 @@ export default function About() {
       {/* Profile Header — LinkedIn-style */}
       <section className="relative">
         {/* Cover bar */}
-        <div className="h-24 md:h-32 rounded-t-lg bg-gradient-to-r from-[#0f1f35] via-[#0f2a40] to-[#0a1929] border border-[#1e2d3d] border-b-0" />
+        <div className="h-24 md:h-32 rounded-t-lg bg-gradient-to-r from-[#0f1f35] via-[#123047] to-[#0a1929] border border-[#1e2d3d] border-b-0" />
 
         {/* Profile card */}
-        <div className="border border-[#1e2d3d] border-t-0 rounded-b-lg bg-[#0f1520] px-6 md:px-8 pb-8">
+        <div className="border border-[#1e2d3d] border-t-0 rounded-b-lg bg-[#0f1520]/95 backdrop-blur-sm px-6 md:px-8 pb-8">
           {/* Avatar placeholder */}
           <div className="relative -mt-12 mb-4">
-            <div className="w-20 h-20 md:w-24 md:h-24 rounded-full border-4 border-[#0a0e14] bg-gradient-to-br from-[#38bdf8] to-[#818cf8] flex items-center justify-center text-2xl md:text-3xl font-bold text-[#0a0e14]">
+            <div className="w-20 h-20 md:w-24 md:h-24 rounded-full border-4 border-[#0a0e14] bg-gradient-to-br from-[#38bdf8] to-[#0ea5e9] flex items-center justify-center text-2xl md:text-3xl font-bold text-[#0a0e14] shadow-[0_0_40px_-12px_#38bdf888]">
               RW
             </div>
           </div>

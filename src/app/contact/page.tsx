@@ -1,4 +1,5 @@
 import { GitBranch, ExternalLink, ArrowUpRight } from "lucide-react";
+import Reveal from "@/components/Reveal";
 
 const contactMethods = [
   {
@@ -43,8 +44,7 @@ const engagements = [
 export default function Contact() {
   return (
     <div className="max-w-4xl mx-auto px-6 py-16 space-y-16">
-      {/* Header */}
-      <div className="space-y-3">
+      <Reveal className="space-y-3">
         <p className="text-xs font-mono text-[#38bdf8] uppercase tracking-widest">
           Contact
         </p>
@@ -54,86 +54,93 @@ export default function Contact() {
           consulting, and technical advisory work. If you&apos;re building something
           ambitious, let&apos;s talk.
         </p>
-      </div>
+      </Reveal>
 
       <div className="grid md:grid-cols-2 gap-8">
-        {/* Contact methods */}
         <div className="space-y-4">
-          <h2 className="text-sm font-semibold text-[#e8edf5]">
-            Contact Methods
-          </h2>
+          <Reveal>
+            <h2 className="text-sm font-semibold text-[#e8edf5]">
+              Contact Methods
+            </h2>
+          </Reveal>
           <div className="space-y-3">
-            {contactMethods.map((method) => {
+            {contactMethods.map((method, index) => {
               const Icon = method.icon;
               return (
-                <a key={method.label} href={method.href} target="_blank" rel="noopener noreferrer">
-                  <div className="p-5 rounded-lg border border-[#1e2d3d] bg-[#0f1520] space-y-1.5 card-hover">
-                    <div className="flex items-center gap-2">
-                      <Icon size={14} className="text-[#38bdf8]" />
-                      <span className="text-xs font-mono text-[#4a5568] uppercase tracking-wider">
-                        {method.label}
-                      </span>
-                      <ArrowUpRight
-                        size={12}
-                        className="text-[#4a5568] ml-auto"
-                      />
+                <Reveal key={method.label} delayMs={index * 70}>
+                  <a
+                    href={method.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block group"
+                  >
+                    <div className="p-5 rounded-lg border border-[#1e2d3d] bg-[#0f1520]/90 backdrop-blur-sm space-y-1.5 card-hover">
+                      <div className="flex items-center gap-2">
+                        <Icon size={14} className="text-[#38bdf8]" />
+                        <span className="text-xs font-mono text-[#4a5568] uppercase tracking-wider">
+                          {method.label}
+                        </span>
+                        <ArrowUpRight
+                          size={12}
+                          className="text-[#4a5568] ml-auto transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-[#38bdf8]"
+                        />
+                      </div>
+                      <p className="text-sm font-medium text-[#e8edf5]">
+                        {method.value}
+                      </p>
+                      <p className="text-xs text-[#8b98ac]">{method.description}</p>
                     </div>
-                    <p className="text-sm font-medium text-[#e8edf5]">
-                      {method.value}
-                    </p>
-                    <p className="text-xs text-[#8b98ac]">{method.description}</p>
-                  </div>
-                </a>
+                  </a>
+                </Reveal>
               );
             })}
           </div>
         </div>
 
-        {/* Engagement types */}
         <div className="space-y-4">
-          <h2 className="text-sm font-semibold text-[#e8edf5]">
-            Open to
-          </h2>
+          <Reveal>
+            <h2 className="text-sm font-semibold text-[#e8edf5]">Open to</h2>
+          </Reveal>
           <div className="space-y-3">
-            {engagements.map((eng) => (
-              <div
-                key={eng.title}
-                className="p-5 rounded-lg border border-[#1e2d3d] bg-[#0f1520] space-y-1.5"
-              >
-                <div className="flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#38bdf8]" />
-                  <p className="text-sm font-medium text-[#e8edf5]">
-                    {eng.title}
+            {engagements.map((eng, index) => (
+              <Reveal key={eng.title} delayMs={index * 60}>
+                <div className="p-5 rounded-lg border border-[#1e2d3d] bg-[#0f1520]/90 backdrop-blur-sm space-y-1.5 card-hover">
+                  <div className="flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#38bdf8]" />
+                    <p className="text-sm font-medium text-[#e8edf5]">
+                      {eng.title}
+                    </p>
+                  </div>
+                  <p className="text-xs text-[#8b98ac] leading-relaxed pl-3.5">
+                    {eng.description}
                   </p>
                 </div>
-                <p className="text-xs text-[#8b98ac] leading-relaxed pl-3.5">
-                  {eng.description}
-                </p>
-              </div>
+              </Reveal>
             ))}
           </div>
         </div>
       </div>
 
-      {/* Primary CTA */}
-      <div className="p-8 rounded-lg border border-[#38bdf820] bg-gradient-to-br from-[#0f1520] to-[#0a0e14] text-center space-y-4">
-        <h2 className="text-xl font-bold text-[#e8edf5]">
-          Ready to build something?
-        </h2>
-        <p className="text-sm text-[#8b98ac] max-w-md mx-auto leading-relaxed">
-          The best way to reach me is LinkedIn. I respond to every serious
-          inquiry, typically within 24 hours.
-        </p>
-        <a
-          href="https://linkedin.com/in/ryandwatts"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center gap-2 px-6 py-3 bg-[#38bdf8] text-[#0a0e14] rounded text-sm font-semibold hover:bg-[#7dd3fc] transition-colors"
-        >
-          <ExternalLink size={16} />
-          Connect on LinkedIn
-        </a>
-      </div>
+      <Reveal>
+        <div className="p-8 rounded-lg border border-[#38bdf820] bg-gradient-to-br from-[#0f1520] to-[#0a0e14] text-center space-y-4">
+          <h2 className="text-xl font-bold text-[#e8edf5]">
+            Ready to build something?
+          </h2>
+          <p className="text-sm text-[#8b98ac] max-w-md mx-auto leading-relaxed">
+            The best way to reach me is LinkedIn. I respond to every serious
+            inquiry, typically within 24 hours.
+          </p>
+          <a
+            href="https://linkedin.com/in/ryandwatts"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 px-6 py-3 bg-[#38bdf8] text-[#0a0e14] rounded text-sm font-semibold hover:bg-[#7dd3fc] transition-colors"
+          >
+            <ExternalLink size={16} />
+            Connect on LinkedIn
+          </a>
+        </div>
+      </Reveal>
     </div>
   );
 }

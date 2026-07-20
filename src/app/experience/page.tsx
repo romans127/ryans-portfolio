@@ -1,4 +1,8 @@
+import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
+import CountUp from "@/components/CountUp";
+import Reveal from "@/components/Reveal";
+import Timeline from "@/components/Timeline";
 
 const timeline = [
   {
@@ -72,8 +76,7 @@ const timeline = [
 export default function Experience() {
   return (
     <div className="max-w-4xl mx-auto px-6 py-16 space-y-12">
-      {/* Header */}
-      <div className="space-y-2">
+      <Reveal className="space-y-2">
         <p className="text-xs font-mono text-[#38bdf8] uppercase tracking-widest">
           Career
         </p>
@@ -82,110 +85,48 @@ export default function Experience() {
           15+ years building enterprise AI systems, data infrastructure, and
           cybersecurity intelligence platforms across startups and enterprises.
         </p>
-      </div>
+      </Reveal>
 
-      {/* Stats row */}
       <div className="grid grid-cols-3 gap-3">
         {[
           { label: "Years Active", value: "15+" },
           { label: "Companies", value: "6+" },
           { label: "Consulting Clients", value: "20+" },
-        ].map((s) => (
-          <div
-            key={s.label}
-            className="p-4 rounded-lg border border-[#1e2d3d] bg-[#0f1520] text-center"
-          >
-            <div className="text-xl font-mono font-bold text-[#e8edf5]">
-              {s.value}
+        ].map((stat, index) => (
+          <Reveal key={stat.label} delayMs={index * 60}>
+            <div className="p-4 rounded-lg border border-[#1e2d3d] bg-[#0f1520]/90 backdrop-blur-sm text-center card-hover">
+              <div className="text-xl font-mono font-bold text-[#e8edf5]">
+                <CountUp value={stat.value} />
+              </div>
+              <div className="text-xs text-[#4a5568] mt-0.5">{stat.label}</div>
             </div>
-            <div className="text-xs text-[#4a5568] mt-0.5">{s.label}</div>
-          </div>
+          </Reveal>
         ))}
       </div>
 
-      {/* Timeline */}
-      <div className="relative pl-6">
-        <div className="timeline-line" />
-        <div className="space-y-8">
-          {timeline.map((item, i) => (
-            <div key={i} className="relative animate-fade-in">
-              {/* Timeline dot */}
-              <div
-                className={`absolute -left-[25px] top-1.5 w-2.5 h-2.5 rounded-full border-2 ${
-                  item.highlight
-                    ? "bg-[#38bdf8] border-[#38bdf8]"
-                    : "bg-[#0a0e14] border-[#38bdf840]"
-                }`}
-              />
+      <Timeline items={timeline} />
 
-              <div
-                className={`p-5 md:p-6 rounded-lg border bg-[#0f1520] space-y-3 card-hover ${
-                  item.highlight
-                    ? "border-[#38bdf820]"
-                    : "border-[#1e2d3d]"
-                }`}
-              >
-                {/* Header */}
-                <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-1">
-                  <div>
-                    <div className="flex items-center gap-2 flex-wrap">
-                      <h3 className="font-semibold text-[#e8edf5]">
-                        {item.role}
-                      </h3>
-                      <span className="text-xs px-1.5 py-0.5 rounded bg-[#38bdf810] text-[#38bdf8] font-mono">
-                        {item.type}
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-2 mt-0.5">
-                      <p className="text-sm text-[#38bdf8]">{item.company}</p>
-                      <span className="text-[#4a5568]">·</span>
-                      <p className="text-xs text-[#4a5568]">{item.location}</p>
-                    </div>
-                  </div>
-                  <span className="text-xs font-mono text-[#4a5568] shrink-0">
-                    {item.year}
-                  </span>
-                </div>
-
-                {/* Summary */}
-                <p className="text-sm text-[#8b98ac] leading-relaxed">
-                  {item.summary}
-                </p>
-
-                {/* Tags */}
-                <div className="flex flex-wrap gap-1.5">
-                  {item.tags.map((tag) => (
-                    <span key={tag} className="skill-tag">
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Currently consulting */}
-      <div className="p-6 rounded-lg border border-[#38bdf820] bg-gradient-to-r from-[#0f1520] to-[#0a0e14] space-y-3">
-        <div className="flex items-center gap-2">
-          <span className="w-1.5 h-1.5 rounded-full bg-[#38bdf8] animate-pulse" />
-          <p className="text-sm font-semibold text-[#e8edf5]">
-            Open to opportunities
+      <Reveal>
+        <div className="p-6 rounded-lg border border-[#38bdf820] bg-gradient-to-r from-[#0f1520] to-[#0a0e14] space-y-3">
+          <div className="flex items-center gap-2">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#38bdf8] animate-pulse" />
+            <p className="text-sm font-semibold text-[#e8edf5]">
+              Open to opportunities
+            </p>
+          </div>
+          <p className="text-sm text-[#8b98ac] leading-relaxed">
+            I&apos;m available for Principal-level AI/Data engineering roles and
+            strategic consulting engagements. If you&apos;re building something ambitious
+            that needs deep AI and data expertise, let&apos;s talk.
           </p>
+          <Link
+            href="/contact"
+            className="inline-flex items-center gap-1.5 text-sm text-[#38bdf8] hover:text-[#7dd3fc] transition-colors"
+          >
+            Get in touch <ArrowUpRight size={14} />
+          </Link>
         </div>
-        <p className="text-sm text-[#8b98ac] leading-relaxed">
-          I&apos;m available for Principal-level AI/Data engineering roles and
-          strategic consulting engagements. If you&apos;re building something ambitious
-          that needs deep AI and data expertise, let&apos;s talk.
-        </p>
-        <a
-          href="/contact"
-          className="inline-flex items-center gap-1.5 text-sm text-[#38bdf8] hover:text-[#7dd3fc] transition-colors"
-        >
-          Get in touch <ArrowUpRight size={14} />
-        </a>
-      </div>
+      </Reveal>
     </div>
   );
 }
