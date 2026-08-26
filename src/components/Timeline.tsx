@@ -12,6 +12,7 @@ type TimelineItem = {
   tags: string[];
   summary: string;
   highlight: boolean;
+  engagements?: { client: string; period: string; detail: string }[];
 };
 
 type TimelineProps = {
@@ -51,8 +52,8 @@ export default function Timeline({ items }: TimelineProps) {
               onClick={() => setActive(filter)}
               className={`px-3 py-1.5 rounded text-xs font-mono transition-all border ${
                 selected
-                  ? "bg-[#38bdf814] border-[#38bdf840] text-[#38bdf8]"
-                  : "bg-transparent border-[#1e2d3d] text-[#8b98ac] hover:border-[#38bdf830] hover:text-[#e8edf5]"
+                  ? "border-signal/40 bg-signal/10 text-signal"
+                  : "border-line text-stone hover:border-signal/30 hover:text-cream"
               }`}
             >
               {filter}
@@ -74,8 +75,8 @@ export default function Timeline({ items }: TimelineProps) {
                   <div
                     className={`absolute -left-[25px] top-1.5 w-2.5 h-2.5 rounded-full border-2 transition-colors ${
                       item.highlight || isOpen
-                        ? "bg-[#38bdf8] border-[#38bdf8] shadow-[0_0_0_4px_#38bdf814]"
-                        : "bg-[#0a0e14] border-[#38bdf840]"
+                        ? "border-signal bg-signal shadow-[0_0_0_4px_#4cc9f014]"
+                        : "border-signal/40 bg-ink"
                     }`}
                   />
 
@@ -84,41 +85,63 @@ export default function Timeline({ items }: TimelineProps) {
                     onClick={() =>
                       setExpanded((current) => (current === key ? null : key))
                     }
-                    className={`w-full text-left p-5 md:p-6 rounded-lg border bg-[#0f1520]/90 backdrop-blur-sm space-y-3 card-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#38bdf840] ${
-                      item.highlight || isOpen
-                        ? "border-[#38bdf830]"
-                        : "border-[#1e2d3d]"
+                    className={`card-hover w-full space-y-3 rounded-2xl border bg-panel/90 p-5 text-left backdrop-blur-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal/40 md:p-6 ${
+                      item.highlight || isOpen ? "border-signal/30" : "border-line"
                     }`}
                     aria-expanded={isOpen}
                   >
                     <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-1">
                       <div>
                         <div className="flex items-center gap-2 flex-wrap">
-                          <h3 className="font-semibold text-[#e8edf5]">
-                            {item.role}
-                          </h3>
-                          <span className="text-xs px-1.5 py-0.5 rounded bg-[#38bdf810] text-[#38bdf8] font-mono">
+                          <h3 className="font-medium text-cream">{item.role}</h3>
+                          <span className="rounded bg-signal/10 px-1.5 py-0.5 font-mono text-xs text-signal">
                             {item.type}
                           </span>
                         </div>
                         <div className="flex items-center gap-2 mt-0.5">
-                          <p className="text-sm text-[#38bdf8]">{item.company}</p>
-                          <span className="text-[#4a5568]">·</span>
-                          <p className="text-xs text-[#4a5568]">{item.location}</p>
+                          <p className="text-sm text-copper">{item.company}</p>
+                          <span className="text-dim">·</span>
+                          <p className="text-xs text-dim">{item.location}</p>
                         </div>
                       </div>
-                      <span className="text-xs font-mono text-[#4a5568] shrink-0">
+                      <span className="shrink-0 font-mono text-xs text-dim">
                         {item.year}
                       </span>
                     </div>
 
                     <p
-                      className={`text-sm text-[#8b98ac] leading-relaxed transition-all ${
+                      className={`text-sm leading-relaxed text-stone transition-all ${
                         isOpen ? "line-clamp-none" : "line-clamp-2"
                       }`}
                     >
                       {item.summary}
                     </p>
+
+                    {isOpen && item.engagements && item.engagements.length > 0 && (
+                      <div className="space-y-3 border-t border-line pt-4">
+                        <p className="font-mono text-[11px] uppercase tracking-wider text-dim">
+                          Client engagements
+                        </p>
+                        {item.engagements.map((engagement) => (
+                          <div
+                            key={engagement.client}
+                            className="rounded-xl border border-line bg-raised/60 p-4"
+                          >
+                            <div className="flex flex-wrap items-baseline justify-between gap-2">
+                              <p className="text-sm font-medium text-copper">
+                                {engagement.client}
+                              </p>
+                              <p className="font-mono text-[11px] text-dim">
+                                {engagement.period}
+                              </p>
+                            </div>
+                            <p className="mt-2 text-sm leading-relaxed text-stone">
+                              {engagement.detail}
+                            </p>
+                          </div>
+                        ))}
+                      </div>
+                    )}
 
                     <div className="flex items-center justify-between gap-3">
                       <div className="flex flex-wrap gap-1.5">
@@ -128,7 +151,7 @@ export default function Timeline({ items }: TimelineProps) {
                           </span>
                         ))}
                       </div>
-                      <span className="text-[11px] font-mono text-[#4a5568] shrink-0">
+                      <span className="shrink-0 font-mono text-[11px] text-dim">
                         {isOpen ? "Collapse" : "Expand"}
                       </span>
                     </div>

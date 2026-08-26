@@ -3,15 +3,9 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Menu, X } from "lucide-react";
-
-const links = [
-  { href: "/", label: "Home" },
-  { href: "/about", label: "About" },
-  { href: "/experience", label: "Experience" },
-  { href: "/blog", label: "Writing" },
-  { href: "/contact", label: "Contact" },
-];
+import { Menu, Search, X } from "lucide-react";
+import SearchOverlay from "@/components/SearchOverlay";
+import { navLinks, profile } from "@/lib/site";
 
 function isActive(pathname: string, href: string) {
   if (href === "/") return pathname === "/";
@@ -21,82 +15,117 @@ function isActive(pathname: string, href: string) {
 export default function Nav() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [prevPathname, setPrevPathname] = useState(pathname);
+
+  if (prevPathname !== pathname) {
+    setPrevPathname(pathname);
+    setOpen(false);
+  }
 
   useEffect(() => {
-    setOpen(false);
-  }, [pathname]);
+    const onKey = (event: KeyboardEvent) => {
+      if ((event.metaKey || event.ctrlKey) && event.key === "k") {
+        event.preventDefault();
+        setSearchOpen(true);
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-[#1e2d3d]/80 bg-[#0a0e14]/75 backdrop-blur-md">
-      <div className="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-2 group">
-          <span className="font-mono text-xs text-[#38bdf8] opacity-60 group-hover:opacity-100 transition-opacity">
-            {">"}
-          </span>
-          <span className="font-semibold text-sm text-[#e8edf5] tracking-tight">
-            Ryan Watts
-          </span>
-        </Link>
-
-        <nav className="hidden md:flex items-center gap-6">
-          {links.map((link) => {
-            const active = isActive(pathname, link.href);
-            return (
-              <Link
-                key={link.href}
-                href={link.href}
-                data-active={active}
-                className={`nav-link text-sm ${
-                  active ? "text-[#e8edf5]" : "text-[#8b98ac] hover:text-[#e8edf5]"
-                }`}
-              >
-                {link.label}
-              </Link>
-            );
-          })}
-        </nav>
-
-        <Link
-          href="/contact"
-          className="hidden md:inline-flex items-center gap-2 px-4 py-1.5 rounded text-xs font-medium border border-[#38bdf830] text-[#38bdf8] hover:bg-[#38bdf810] hover:border-[#38bdf860] transition-all"
-        >
-          Get in touch
-        </Link>
-
-        <button
-          className="md:hidden text-[#8b98ac] hover:text-[#e8edf5] transition-colors"
-          onClick={() => setOpen((value) => !value)}
-          aria-label="Toggle menu"
-          aria-expanded={open}
-        >
-          {open ? <X size={20} /> : <Menu size={20} />}
-        </button>
-      </div>
-
-      <div className="md:hidden mobile-drawer border-t border-[#1e2d3d]" data-open={open}>
-        <div className="bg-[#0a0e14]/95 px-6 py-4 flex flex-col gap-4">
-          {links.map((link) => {
-            const active = isActive(pathname, link.href);
-            return (
-              <Link
-                key={link.href}
-                href={link.href}
-                className={`text-sm transition-colors ${
-                  active ? "text-[#38bdf8]" : "text-[#8b98ac]"
-                }`}
-              >
-                {link.label}
-              </Link>
-            );
-          })}
-          <Link
-            href="/contact"
-            className="text-sm text-[#38bdf8] border-t border-[#1e2d3d] pt-4"
-          >
-            Get in touch
+    <>
+      <header className="sticky top-0 z-50 border-b border-line/80 bg-ink/70 backdrop-blur-md">
+        <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
+          <Link href="/" className="group flex items-center gap-3">
+            <span className="flex h-7 w-7 items-center justify-center rounded-full border border-copper/40 bg-copper/10 font-mono text-[10px] text-copper">
+              {profile.initials}
+            </span>
+            <span className="text-sm font-medium tracking-tight text-cream">
+              {profile.name}
+            </span>
           </Link>
+
+          <nav className="hidden items-center gap-6 md:flex">
+            {navLinks.map((link) => {
+              const active = isActive(pathname, link.href);
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  data-active={active}
+                  className={`nav-link ${active ? "text-cream" : ""}`}
+                >
+                  {link.label}
+                </Link>
+              );
+            })}
+          </nav>
+
+          <div className="hidden items-center gap-3 md:flex">
+            <button
+              type="button"
+              onClick={() => setSearchOpen(true)}
+              className="flex items-center gap-2 rounded-full border border-line px-3 py-1.5 text-xs text-stone transition-colors hover:border-signal/30 hover:text-cream"
+              aria-label="Search portfolio"
+            >
+              <Search size={14} />
+              <span className="hidden lg:inline">Search</span>
+              <kbd className="hidden rounded border border-line px-1 font-mono text-[10px] text-dim lg:inline">
+                ⌘K
+              </kbd>
+            </button>
+            <Link
+              href="/contact"
+              className="rounded-full border border-signal/30 px-4 py-1.5 text-xs text-signal transition-colors hover:bg-signal/10"
+            >
+              Get in touch
+            </Link>
+          </div>
+
+          <div className="flex items-center gap-3 md:hidden">
+            <button
+              type="button"
+              onClick={() => setSearchOpen(true)}
+              className="text-stone transition-colors hover:text-cream"
+              aria-label="Search portfolio"
+            >
+              <Search size={20} />
+            </button>
+            <button
+              className="text-stone transition-colors hover:text-cream"
+              onClick={() => setOpen((value) => !value)}
+              aria-label="Toggle menu"
+              aria-expanded={open}
+            >
+              {open ? <X size={20} /> : <Menu size={20} />}
+            </button>
+          </div>
         </div>
-      </div>
-    </header>
+
+        <div className="mobile-drawer border-t border-line md:hidden" data-open={open}>
+          <div className="flex flex-col gap-4 bg-ink/95 px-6 py-4">
+            {navLinks.map((link) => {
+              const active = isActive(pathname, link.href);
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className={`text-sm ${active ? "text-signal" : "text-stone"}`}
+                >
+                  {link.label}
+                </Link>
+              );
+            })}
+            <Link href="/contact" className="border-t border-line pt-4 text-sm text-signal">
+              Get in touch
+            </Link>
+          </div>
+        </div>
+      </header>
+
+      <SearchOverlay open={searchOpen} onClose={() => setSearchOpen(false)} />
+    </>
   );
 }

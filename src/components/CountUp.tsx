@@ -42,10 +42,6 @@ export default function CountUp({ value, className = "" }: CountUpProps) {
     const prefersReduced = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
     ).matches;
-    if (prefersReduced) {
-      setDisplay(value);
-      return;
-    }
 
     let frame = 0;
     let started = false;
@@ -68,7 +64,11 @@ export default function CountUp({ value, className = "" }: CountUpProps) {
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          requestAnimationFrame(animate);
+          if (prefersReduced) {
+            setDisplay(value);
+          } else {
+            requestAnimationFrame(animate);
+          }
           observer.disconnect();
         }
       },

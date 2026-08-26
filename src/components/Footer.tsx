@@ -1,46 +1,44 @@
 import Link from "next/link";
-import { GitBranch, ExternalLink } from "lucide-react";
+import { profile } from "@/lib/site";
 
 export default function Footer() {
   return (
-    <footer className="border-t border-[#1e2d3d]/80 bg-[#0a0e14]/80 backdrop-blur-sm">
-      <div className="max-w-5xl mx-auto px-6 py-10 flex flex-col md:flex-row items-center justify-between gap-6">
+    <footer className="border-t border-line/80 bg-ink/80 backdrop-blur-sm">
+      <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-6 px-6 py-10 md:flex-row">
         <div className="text-center md:text-left">
-          <p className="text-sm font-semibold text-[#e8edf5]">Ryan Watts</p>
-          <p className="text-xs text-[#8b98ac] mt-1">
-            Principal AI & Data Engineer
+          <p className="text-sm font-medium text-cream">{profile.name}</p>
+          <p className="mt-1 text-xs text-stone">
+            {profile.currentRole}, {profile.currentCompany}
           </p>
         </div>
 
-        <div className="flex items-center gap-5">
+        <div className="flex items-center gap-5 text-xs text-dim">
           <a
-            href="https://linkedin.com/in/ryandwatts"
+            href={profile.linkedin}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-[#4a5568] hover:text-[#38bdf8] transition-colors"
-            aria-label="LinkedIn"
+            className="hover:text-signal"
           >
-            <ExternalLink size={18} />
+            LinkedIn
           </a>
           <a
-            href="https://github.com/romans127"
+            href={profile.github}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-[#4a5568] hover:text-[#38bdf8] transition-colors"
-            aria-label="GitHub"
+            className="hover:text-signal"
           >
-            <GitBranch size={18} />
+            GitHub
           </a>
-          <Link
-            href="/contact"
-            className="text-xs font-mono text-[#4a5568] hover:text-[#38bdf8] transition-colors"
-          >
+          <a href={`mailto:${profile.email}`} className="hover:text-signal">
+            Email
+          </a>
+          <Link href="/contact" className="hover:text-signal">
             Contact
           </Link>
         </div>
 
-        <p className="text-xs text-[#4a5568]">
-          © {new Date().getFullYear()} Ryan Watts. All rights reserved.
+        <p className="text-xs text-dim">
+          © {new Date().getFullYear()} {profile.name}
         </p>
       </div>
     </footer>
