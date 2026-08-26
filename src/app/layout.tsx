@@ -1,57 +1,75 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import type { ReactNode } from "react";
+import { IBM_Plex_Mono, Instrument_Serif, Outfit } from "next/font/google";
 import "./globals.css";
+import Atmosphere from "@/components/Atmosphere";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
+import { profile } from "@/lib/site";
 
-const inter = Inter({
+const sans = Outfit({
   subsets: ["latin"],
-  variable: "--font-inter",
+  variable: "--font-sans",
   display: "swap",
+  weight: ["300", "400", "500", "600", "700"],
+});
+
+const display = Instrument_Serif({
+  subsets: ["latin"],
+  variable: "--font-display",
+  display: "swap",
+  weight: "400",
+});
+
+const mono = IBM_Plex_Mono({
+  subsets: ["latin"],
+  variable: "--font-mono",
+  display: "swap",
+  weight: ["400", "500"],
 });
 
 export const metadata: Metadata = {
-  title: "Ryan Watts — Principal AI & Data Engineer",
-  description:
-    "Principal AI & Data Engineer with 15+ years architecting transformative AI solutions, enterprise data platforms, and cybersecurity intelligence systems.",
+  title: `${profile.name} — ${profile.title}`,
+  description: profile.lede,
   keywords: [
     "Ryan Watts",
-    "Principal AI Engineer",
+    "Director of Data",
+    "Head of AI",
     "Data Engineer",
-    "AI Architecture",
-    "Machine Learning",
-    "Data Platform",
-    "LLM",
     "Agentic AI",
+    "MCP",
+    "dbt",
+    "BigQuery",
   ],
-  authors: [{ name: "Ryan Watts" }],
-  creator: "Ryan Watts",
+  authors: [{ name: profile.name }],
+  creator: profile.name,
   openGraph: {
-    title: "Ryan Watts — Principal AI & Data Engineer",
-    description:
-      "Principal AI & Data Engineer with 15+ years architecting transformative AI solutions and enterprise data platforms.",
+    title: `${profile.name} — ${profile.title}`,
+    description: profile.lede,
     type: "website",
     locale: "en_US",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Ryan Watts — Principal AI & Data Engineer",
-    description:
-      "Principal AI & Data Engineer with 15+ years architecting transformative AI solutions and enterprise data platforms.",
+    title: `${profile.name} — ${profile.title}`,
+    description: profile.lede,
   },
 };
 
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode;
+  children: ReactNode;
 }>) {
   return (
-    <html lang="en" className={inter.variable}>
-      <body className="min-h-screen flex flex-col">
-        <Nav />
-        <main className="flex-1">{children}</main>
-        <Footer />
+    <html lang="en" data-scroll-behavior="smooth" className={`${sans.variable} ${display.variable} ${mono.variable}`}>
+      <body className="flex min-h-screen flex-col font-sans">
+        <Atmosphere />
+        <div className="site-shell flex min-h-screen flex-col">
+          <Nav />
+          <main className="flex-1">{children}</main>
+          <Footer />
+        </div>
       </body>
     </html>
   );
