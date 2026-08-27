@@ -335,6 +335,76 @@ body {
   color: #4cc9f0;
 }
 
+.skill-icon-tag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 0.65rem;
+  border: 1px solid #1e2c47;
+  background-color: #0f1a2e;
+  color: #a2b0ca;
+  transition:
+    border-color 0.2s ease,
+    color 0.2s ease,
+    background-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.skill-icon-tag:hover {
+  border-color: color-mix(in srgb, var(--skill-brand) 45%, #1e2c47);
+  background-color: color-mix(in srgb, var(--skill-brand) 12%, #0f1a2e);
+  color: var(--skill-brand);
+  transform: translateY(-1px);
+}
+
+.skill-icon-tag[aria-expanded="true"] {
+  border-color: color-mix(in srgb, var(--skill-brand) 60%, #1e2c47);
+  background-color: color-mix(in srgb, var(--skill-brand) 16%, #0f1a2e);
+  color: var(--skill-brand);
+}
+
+.skill-popover {
+  position: fixed;
+  transform: translateX(-50%);
+  z-index: 90;
+  width: 14rem;
+  padding: 0.65rem 0.8rem;
+  border-radius: 0.75rem;
+  border: 1px solid #1e2c47;
+  background-color: #0b1424;
+  box-shadow:
+    0 12px 32px rgba(3, 7, 18, 0.55),
+    0 0 0 1px rgba(76, 201, 240, 0.04);
+  text-align: left;
+  animation: skill-popover-in 0.16s ease;
+}
+
+.skill-popover::before {
+  content: "";
+  position: absolute;
+  top: -5px;
+  left: 50%;
+  width: 8px;
+  height: 8px;
+  transform: translateX(-50%) rotate(45deg);
+  background-color: #0b1424;
+  border-left: 1px solid #1e2c47;
+  border-top: 1px solid #1e2c47;
+}
+
+@keyframes skill-popover-in {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-3px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
 .timeline-line {
   position: absolute;
   left: 0;

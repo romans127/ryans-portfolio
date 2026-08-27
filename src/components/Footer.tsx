@@ -7,9 +7,7 @@ export default function Footer() {
       <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-6 px-6 py-10 md:flex-row">
         <div className="text-center md:text-left">
           <p className="text-sm font-medium text-cream">{profile.name}</p>
-          <p className="mt-1 text-xs text-stone">
-            {profile.currentRole}, {profile.currentCompany}
-          </p>
+          <p className="mt-1 text-xs text-stone">{profile.title}</p>
         </div>
 
         <div className="flex items-center gap-5 text-xs text-dim">

@@ -17,7 +17,7 @@ export const profile = {
   summary: [
     "Python and SQL are where I spend most days in the warehouse, with Go when a pipeline or an MCP server needs it and Postgres or BigQuery on the modeling side.",
     "Prefect and Airflow run the jobs. Kubernetes or Docker depending on the need. Agentic workflows sit on the same dbt model foundation.",
-    "I build specialized agents and skills, plus custom MCP servers in Go. That same hands-on work is how I lead people through roadblocks or scale teams from 0 to a full division.",
+    "I build specialized agents and skills, plus custom MCP servers in Go. That same hands-on work is how I lead people through roadblocks or scale teams from 0 to full divisions.",
   ],
 };
 
@@ -1019,15 +1019,39 @@ export const projects: Project[] = [
 export const skillGroups = [
   {
     category: "Languages",
-    skills: ["Python", "SQL", "Go", "Terraform"],
+    skills: ["Python", "SQL", "Go", "Terraform", "Rust", "Node", "Vue", "React.js"],
   },
   {
     category: "Warehouse & modeling",
-    skills: ["dbt", "Postgres", "SQL Server", "BigQuery", "Redshift", "Athena"],
+    skills: [
+      "dbt",
+      "Postgres",
+      "SQL Server",
+      "BigQuery",
+      "Redshift",
+      "Athena",
+      "AWS Glue",
+      "MindsDB",
+      "Spark SQL",
+      "MongoDB",
+      "SQLite",
+      "Dagster",
+      "Kestra",
+    ],
   },
   {
     category: "Orchestration & reverse ETL",
-    skills: ["Prefect", "Airflow", "Hightouch", "CI/CD"],
+    skills: [
+      "Prefect",
+      "Airflow",
+      "Hightouch",
+      "CI/CD",
+      "dltHub",
+      "Meltano",
+      "Temporal",
+      "Kafka",
+      "ksqlDB",
+    ],
   },
   {
     category: "Agents & AI",
@@ -1043,7 +1067,6 @@ export const skillGroups = [
   {
     category: "Cloud",
     skills: [
-      "AWS Glue",
       "IAM",
       "S3",
       "Kinesis",
@@ -1055,7 +1078,7 @@ export const skillGroups = [
   },
   {
     category: "BI",
-    skills: ["Looker", "Lightdash"],
+    skills: ["Looker", "Lightdash", "PowerBI", "Metabase", "Data Apps"],
   },
 ];
 
