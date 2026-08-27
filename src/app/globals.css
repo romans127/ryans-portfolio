@@ -543,6 +543,19 @@ body {
   background: #0a1220;
 }
 
+.platform-flow--fullscreen {
+  flex: 1;
+  min-height: 0;
+}
+
+.platform-flow--fullscreen .react-flow {
+  height: 100%;
+}
+
+.platform-flow-fullscreen {
+  background: #0a1220;
+}
+
 .platform-flow .react-flow__node-platform {
   background: transparent;
   border: none;
