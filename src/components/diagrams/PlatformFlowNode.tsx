@@ -65,6 +65,12 @@ export default function PlatformFlowNode({ data }: NodeProps) {
         id="top"
         style={{ opacity: 0, width: 1, height: 1 }}
       />
+      <Handle
+        type="target"
+        position={Position.Bottom}
+        id="bottom-in"
+        style={{ opacity: 0, width: 1, height: 1 }}
+      />
       {lines.map((line, index) => (
         <span key={`${line}-${index}`}>
           {index > 0 ? <br /> : null}
@@ -103,6 +109,12 @@ export default function PlatformFlowNode({ data }: NodeProps) {
         type="source"
         position={Position.Bottom}
         id="bottom"
+        style={{ opacity: 0, width: 1, height: 1 }}
+      />
+      <Handle
+        type="source"
+        position={Position.Top}
+        id="top-out"
         style={{ opacity: 0, width: 1, height: 1 }}
       />
     </div>

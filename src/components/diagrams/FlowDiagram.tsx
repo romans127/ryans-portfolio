@@ -15,6 +15,10 @@ import { Maximize2, Minimize2 } from "lucide-react";
 import "@xyflow/react/dist/style.css";
 import PlatformFlowNode from "@/components/diagrams/PlatformFlowNode";
 import type { FlowChartDef } from "@/lib/platform-diagram-content";
+import {
+  layoutExpansionNodes,
+  shouldHideBaseEdge,
+} from "@/lib/flow-diagram-layout";
 import { getLenis } from "@/lib/smooth-scroll";
 
 type FlowDiagramProps = {
@@ -24,15 +28,21 @@ type FlowDiagramProps = {
   height?: number;
 };
 
-function FitViewOnChange({ fitViewKey }: { fitViewKey: string }) {
+function FitViewOnChange({
+  fitViewKey,
+  fullscreen,
+}: {
+  fitViewKey: string;
+  fullscreen: boolean;
+}) {
   const { fitView } = useReactFlow();
 
   useEffect(() => {
     const timer = window.setTimeout(() => {
-      fitView({ padding: 0.18, duration: 350 });
-    }, 60);
+      fitView({ padding: fullscreen ? 0.12 : 0.2, duration: 400 });
+    }, 80);
     return () => window.clearTimeout(timer);
-  }, [fitView, fitViewKey]);
+  }, [fitView, fitViewKey, fullscreen]);
 
   return null;
 }
@@ -49,23 +59,33 @@ function FlowDiagramFrame({
   const figureRef = useRef<HTMLElement>(null);
 
   const visibleNodes = useMemo(() => {
-    const expansionNodes = Object.entries(chart.expansions ?? {})
-      .filter(([id]) => expandedIds.has(id))
-      .flatMap(([, expansion]) => expansion.nodes);
-    return [...chart.nodes, ...expansionNodes].map((node) => ({
+    const baseNodes = chart.nodes.map((node) => ({
       ...node,
       data: {
         ...node.data,
         expanded: expandedIds.has(node.id),
       },
     }));
+
+    const expansionNodes = Object.entries(chart.expansions ?? {})
+      .filter(([id]) => expandedIds.has(id))
+      .flatMap(([parentId, expansion]) => {
+        const parent = chart.nodes.find((node) => node.id === parentId);
+        if (!parent) return expansion.nodes;
+        return layoutExpansionNodes(parent, expansion);
+      });
+
+    return [...baseNodes, ...expansionNodes];
   }, [chart, expandedIds]);
 
   const visibleEdges = useMemo(() => {
+    const baseEdges = chart.edges.filter(
+      (edge) => !shouldHideBaseEdge(edge, expandedIds),
+    );
     const expansionEdges = Object.entries(chart.expansions ?? {})
       .filter(([id]) => expandedIds.has(id))
       .flatMap(([, expansion]) => expansion.edges);
-    return [...chart.edges, ...expansionEdges];
+    return [...baseEdges, ...expansionEdges];
   }, [chart, expandedIds]);
 
   const [nodes, setNodes, onNodesChange] = useNodesState(visibleNodes);
@@ -176,11 +196,13 @@ function FlowDiagramFrame({
             nodesConnectable={false}
             elementsSelectable
             fitView
-            fitViewOptions={{ padding: 0.2 }}
+            fitViewOptions={{ padding: fullscreen ? 0.14 : 0.22 }}
             minZoom={0.35}
             maxZoom={fullscreen ? 2 : 1.4}
+            defaultEdgeOptions={{ type: "smoothstep" }}
+            elevateEdgesOnSelect
           >
-            <FitViewOnChange fitViewKey={fitViewKey} />
+            <FitViewOnChange fitViewKey={fitViewKey} fullscreen={fullscreen} />
             <Background
               variant={BackgroundVariant.Dots}
               gap={18}

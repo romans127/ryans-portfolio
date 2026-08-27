@@ -1,4 +1,8 @@
 import type { Edge, Node } from "@xyflow/react";
+import {
+  flowEdge,
+  type FlowExpansionDef,
+} from "@/lib/flow-diagram-layout";
 
 const flowNode = (
   id: string,
@@ -14,24 +18,13 @@ const flowNode = (
   data: { label, tone, expandable },
 });
 
-const flowEdge = (source: string, target: string, label?: string): Edge => ({
-  id: `${source}-${target}`,
-  source,
-  target,
-  label,
-  animated: true,
-  style: { stroke: "#4cc9f0aa", strokeWidth: 1.5 },
-  labelStyle: { fill: "#e9eef8", fontSize: 11, fontWeight: 600, fontFamily: "var(--font-mono)" },
-  labelBgStyle: { fill: "#0b1424", fillOpacity: 0.95 },
-  labelBgPadding: [6, 3] as [number, number],
-  labelBgBorderRadius: 4,
-});
-
 export type FlowChartDef = {
   nodes: Node[];
   edges: Edge[];
-  expansions?: Record<string, { nodes: Node[]; edges: Edge[] }>;
+  expansions?: Record<string, FlowExpansionDef>;
 };
+
+export { flowEdge };
 
 export const MERMAID_CHARTS: Record<string, string> = {
   "kk-product-pillars": `flowchart TB
@@ -181,37 +174,52 @@ export const FLOW_CHARTS: Record<string, FlowChartDef> = {
     ],
     expansions: {
       skills: {
+        direction: "above",
+        layout: {
+          "sk-engineer": { col: -1, row: 0 },
+          "sk-database": { col: 0, row: 0 },
+          "sk-domain": { col: 1, row: 0 },
+          "sk-scope": { col: 0, row: 1 },
+        },
         nodes: [
-          flowNode("sk-scope", "Repo scope<br/>Stack & boundaries", 60, -180, "neutral"),
-          flowNode("sk-engineer", "Engineer skill<br/>Default feature work", 260, -220, "neutral"),
-          flowNode("sk-database", "Database skill<br/>SQL safety · approvals", 460, -220, "neutral"),
-          flowNode("sk-domain", "Domain skill<br/>Compliance rules", 660, -180, "neutral"),
+          flowNode("sk-scope", "Repo scope<br/>Stack & boundaries", 0, 0, "neutral"),
+          flowNode("sk-engineer", "Engineer skill<br/>Default feature work", 0, 0, "neutral"),
+          flowNode("sk-database", "Database skill<br/>SQL safety · approvals", 0, 0, "neutral"),
+          flowNode("sk-domain", "Domain skill<br/>Compliance rules", 0, 0, "neutral"),
         ],
         edges: [
-          flowEdge("skills", "sk-scope", "per repo"),
-          flowEdge("skills", "sk-engineer", "per repo"),
-          flowEdge("skills", "sk-database", "per repo"),
-          flowEdge("skills", "sk-domain", "per repo"),
-          flowEdge("sk-engineer", "agents", "load on task"),
-          flowEdge("sk-database", "agents", "load on task"),
-          flowEdge("sk-domain", "agents", "load on task"),
+          flowEdge("skills", "sk-scope", "per repo", "vertical-up"),
+          flowEdge("skills", "sk-engineer", "per repo", "vertical-up"),
+          flowEdge("skills", "sk-database", "per repo", "vertical-up"),
+          flowEdge("skills", "sk-domain", "per repo", "vertical-up"),
+          flowEdge("sk-engineer", "agents", "load on task", "vertical-down"),
+          flowEdge("sk-database", "agents", "load on task", "vertical-down"),
+          flowEdge("sk-domain", "agents", "load on task", "vertical-down"),
         ],
       },
       memory: {
+        direction: "below",
+        layout: {
+          "mem-working": { col: 0, row: 0 },
+          "mem-raw": { col: 0, row: 1 },
+          "mem-processed": { col: 0, row: 2 },
+          "mem-index": { col: 1, row: 2 },
+          "mem-review": { col: 2, row: 2 },
+        },
         nodes: [
-          flowNode("mem-working", "Working memory<br/>Session scratchpad", 60, 340, "neutral"),
-          flowNode("mem-raw", "Raw inputs<br/>Notes · transcripts", 260, 380, "neutral"),
-          flowNode("mem-processed", "Processed<br/>Summaries · actions", 460, 380, "neutral"),
-          flowNode("mem-index", "Index & tags<br/>Priority-weighted recall", 660, 340, "neutral"),
-          flowNode("mem-review", "Spaced review<br/>1d · 7d · 30d", 460, 480, "neutral"),
+          flowNode("mem-working", "Working memory<br/>Session scratchpad", 0, 0, "neutral"),
+          flowNode("mem-raw", "Raw inputs<br/>Notes · transcripts", 0, 0, "neutral"),
+          flowNode("mem-processed", "Processed<br/>Summaries · actions", 0, 0, "neutral"),
+          flowNode("mem-index", "Index & tags<br/>Priority-weighted recall", 0, 0, "neutral"),
+          flowNode("mem-review", "Spaced review<br/>1d · 7d · 30d", 0, 0, "neutral"),
         ],
         edges: [
-          flowEdge("memory", "mem-working", "session"),
-          flowEdge("mem-working", "mem-raw", "promote"),
-          flowEdge("mem-raw", "mem-processed", "summarize"),
-          flowEdge("mem-processed", "mem-index", "tag & rank"),
-          flowEdge("mem-index", "mem-review", "reinforce"),
-          flowEdge("mem-index", "agents", "recall"),
+          flowEdge("memory", "mem-working", "session", "vertical-down"),
+          flowEdge("mem-working", "mem-raw", "promote", "vertical-down"),
+          flowEdge("mem-raw", "mem-processed", "summarize", "vertical-down"),
+          flowEdge("mem-processed", "mem-index", "tag & rank", "horizontal"),
+          flowEdge("mem-index", "mem-review", "reinforce", "horizontal"),
+          flowEdge("mem-index", "agents", "recall", "vertical-up"),
         ],
       },
     },
