@@ -1,10 +1,18 @@
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
+import CareerTimeline from "@/components/CareerTimeline";
 import MetricCards from "@/components/MetricCards";
 import PipelineCanvas from "@/components/PipelineCanvas";
 import Reveal from "@/components/Reveal";
 import SectionHeading from "@/components/SectionHeading";
-import { craft, getFeaturedProject, metrics, profile, roles } from "@/lib/site";
+import {
+  consultingSeats,
+  craft,
+  getFeaturedProject,
+  metrics,
+  profile,
+  roles,
+} from "@/lib/site";
 
 const featured = getFeaturedProject();
 const recent = roles.filter((role) => role.type === "Full-time").slice(0, 3);
@@ -61,6 +69,26 @@ export default function Home() {
       </section>
 
       <MetricCards metrics={metrics} />
+
+      <section className="relative left-1/2 w-screen -translate-x-1/2 space-y-8">
+        <div className="mx-auto max-w-6xl px-6">
+          <Reveal>
+            <SectionHeading
+              kicker="The journey"
+              title="Seventeen years, one through-line."
+              body="From retail analytics in Flagstaff to founding data seats and a Head of AI tour — every stop shipped the warehouse, the pipelines, and the team. Drag the canvas and click any seat for the story."
+              action={
+                <Link href="/experience" className="text-sm text-signal">
+                  Full career <ArrowUpRight className="inline" size={14} />
+                </Link>
+              }
+            />
+          </Reveal>
+        </div>
+        <Reveal className="px-3 md:px-6">
+          <CareerTimeline roles={roles} consulting={consultingSeats} />
+        </Reveal>
+      </section>
 
       <section className="space-y-8">
         <Reveal>

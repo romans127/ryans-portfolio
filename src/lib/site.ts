@@ -247,6 +247,41 @@ export const roles: Role[] = [
   },
 ];
 
+export const consultingSeats: Role[] = [
+  {
+    role: "Staff Data Engineer, then retainer",
+    company: "PrizePicks",
+    location: "Remote",
+    period: "2022–2024 full-time · 2025 to Present consulting",
+    year: "2022–Present",
+    type: "Consulting",
+    summary:
+      "Original architect of the Sports Gaming dbt model layer, then Staff Data Engineer — finance backup and GDPR retention pipelines across terabyte-scale transactions. Back on retainer since 2025.",
+    bullets: [
+      "Designed the founding dbt model layer for daily-fantasy analytics on BigQuery before the first hire.",
+      "Built finance backup and GDPR retention pipelines with governed cold storage and row-level PII controls in the warehouse.",
+      "Helped grow and onboard the data engineering team from zero to eight dbt-centered engineers; on retainer since 2025.",
+    ],
+    tags: ["dbt", "BigQuery", "GDPR", "Team building"],
+  },
+  {
+    role: "Staff Data/AI Engineer, then consultant",
+    company: "LTK (RewardStyle)",
+    location: "Remote",
+    period: "2023–2024 full-time · consulting since",
+    year: "2023–Present",
+    type: "Consulting",
+    summary:
+      "Staff Data/AI Engineer for the creator-commerce platform, then continued as a consultant — Braze marketing pipelines on Airflow and load-strategy redesigns that cleared duplicate records downstream.",
+    bullets: [
+      "Rebuilt trust in marketing tag tables — traced lineage upstream, then moved fragile incremental loads to reliable full-overwrite strategies.",
+      "Migrated billing CDC pipelines to Airflow on a bronze/silver/gold medallion architecture on S3.",
+      "Shipped the refunds orchestration path into Redshift with custom SQL and primary-key data-quality gates.",
+    ],
+    tags: ["Braze", "Airflow", "Medallion", "Redshift"],
+  },
+];
+
 export type ProjectViz =
   | {
       type: "reactflow";

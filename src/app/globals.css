@@ -41,6 +41,7 @@ html.lenis body {
 
 body {
   position: relative;
+  overflow-x: clip;
   background-color: #050912;
   color: #e9eef8;
   font-family: var(--font-sans), "Outfit", system-ui, sans-serif;
@@ -596,6 +597,70 @@ body {
   color: #a2b0ca;
 }
 
+.career-flow .react-flow {
+  background: transparent;
+}
+
+.career-flow .react-flow__node-career,
+.career-flow .react-flow__node-yearTick {
+  background: transparent;
+  border: none;
+  padding: 0;
+  box-shadow: none;
+}
+
+.career-flow .react-flow__node-yearTick {
+  pointer-events: none;
+}
+
+.career-flow .react-flow__controls {
+  border: 1px solid #1e2c47;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: none;
+}
+
+.career-flow .react-flow__controls-button {
+  background: #0f1a2e;
+  border-bottom: 1px solid #1e2c47;
+  fill: #a2b0ca;
+}
+
+.career-flow .react-flow__controls-button:hover {
+  background: #1e2c47;
+}
+
+.career-flow .react-flow__minimap {
+  border: 1px solid #1e2c47;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.career-flow .react-flow__attribution {
+  background: rgb(15 26 46 / 80%);
+  border-radius: 6px;
+  font-size: 10px;
+  opacity: 0.7;
+  padding: 2px 4px;
+}
+
+.career-flow .react-flow__attribution a {
+  color: #a2b0ca;
+}
+
+.career-node-card {
+  cursor: pointer;
+  transition:
+    border-color 0.25s ease,
+    box-shadow 0.25s ease,
+    transform 0.25s ease;
+}
+
+.career-node-card:hover {
+  transform: translateY(-2px);
+  border-color: #4cc9f080 !important;
+}
+
 .mermaid-shell svg {
   width: 100%;
   height: auto;
@@ -608,6 +673,7 @@ body {
 
   .reveal,
   .card-hover,
+  .career-node-card,
   .mobile-drawer,
   .animate-fade-in,
   .live-dot,
@@ -645,7 +711,8 @@ body {
   .platform-chalk-line,
   .platform-chalk-dot,
   .platform-stats-grid,
-  .platform-flow .react-flow__edge.animated path {
+  .platform-flow .react-flow__edge.animated path,
+  .career-flow .react-flow__edge.animated path {
     animation: none !important;
   }
 }
