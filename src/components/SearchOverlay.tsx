@@ -5,6 +5,7 @@ import Link from "next/link";
 import { ArrowRight, Search, X } from "lucide-react";
 import { searchPortfolio, type SearchResult } from "@/lib/search";
 import { getLenis } from "@/lib/smooth-scroll";
+import { debugLog } from "@/lib/debug-log";
 
 type SearchOverlayProps = {
   open: boolean;
@@ -33,18 +34,38 @@ export default function SearchOverlay({ open, onClose }: SearchOverlayProps) {
   }, [open]);
 
   useEffect(() => {
+    if (!open) return;
+
     const onKey = (event: KeyboardEvent) => {
       if (event.key === "Escape") onClose();
     };
-    if (open) {
-      window.addEventListener("keydown", onKey);
-      document.body.style.overflow = "hidden";
-      getLenis()?.stop();
-    }
+
+    window.addEventListener("keydown", onKey);
+    document.body.style.overflow = "hidden";
+    getLenis()?.stop();
+    // #region agent log
+    debugLog(
+      "SearchOverlay.tsx:open",
+      "Lenis stop on search open",
+      { open: true, lenisStopped: getLenis()?.isStopped ?? null },
+      "H2",
+      "post-fix",
+    );
+    // #endregion
+
     return () => {
       window.removeEventListener("keydown", onKey);
       document.body.style.overflow = "";
       getLenis()?.start();
+      // #region agent log
+      debugLog(
+        "SearchOverlay.tsx:cleanup",
+        "Lenis start on search close",
+        { open: false, lenisStopped: getLenis()?.isStopped ?? null },
+        "H2",
+        "post-fix",
+      );
+      // #endregion
     };
   }, [open, onClose]);
 

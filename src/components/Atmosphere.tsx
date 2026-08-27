@@ -1,6 +1,3 @@
-"use client";
-
-import { useEffect, useMemo, useRef } from "react";
 import type { CSSProperties } from "react";
 
 function mulberry32(seed: number) {
@@ -24,58 +21,23 @@ type PulseStar = {
   max: number;
 };
 
+const pulseStars: PulseStar[] = (() => {
+  const rand = mulberry32(20260826);
+  return Array.from({ length: 22 }, () => ({
+    left: rand() * 100,
+    top: rand() * 100,
+    size: 1 + rand() * 1.8,
+    cyan: rand() > 0.72,
+    dur: 3.5 + rand() * 5,
+    delay: -rand() * 9,
+    min: 0.15 + rand() * 0.2,
+    max: 0.65 + rand() * 0.3,
+  }));
+})();
+
 export default function Atmosphere() {
-  const ref = useRef<HTMLDivElement>(null);
-
-  const pulseStars = useMemo<PulseStar[]>(() => {
-    const rand = mulberry32(20260826);
-    return Array.from({ length: 22 }, () => ({
-      left: rand() * 100,
-      top: rand() * 100,
-      size: 1 + rand() * 1.8,
-      cyan: rand() > 0.72,
-      dur: 3.5 + rand() * 5,
-      delay: -rand() * 9,
-      min: 0.15 + rand() * 0.2,
-      max: 0.65 + rand() * 0.3,
-    }));
-  }, []);
-
-  useEffect(() => {
-    const root = ref.current;
-    if (!root) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-
-    let targetX = 0;
-    let targetY = 0;
-    let currentX = 0;
-    let currentY = 0;
-    let raf = 0;
-
-    const onMove = (event: PointerEvent) => {
-      targetX = (event.clientX / window.innerWidth - 0.5) * 2;
-      targetY = (event.clientY / window.innerHeight - 0.5) * 2;
-    };
-
-    const tick = () => {
-      currentX += (targetX - currentX) * 0.045;
-      currentY += (targetY - currentY) * 0.045;
-      root.style.setProperty("--mx", currentX.toFixed(4));
-      root.style.setProperty("--my", currentY.toFixed(4));
-      raf = requestAnimationFrame(tick);
-    };
-
-    window.addEventListener("pointermove", onMove, { passive: true });
-    raf = requestAnimationFrame(tick);
-
-    return () => {
-      window.removeEventListener("pointermove", onMove);
-      cancelAnimationFrame(raf);
-    };
-  }, []);
-
   return (
-    <div className="site-atmosphere" aria-hidden="true" ref={ref}>
+    <div className="site-atmosphere" aria-hidden="true">
       <div className="site-atmosphere__base" />
       <div className="site-atmosphere__parallax site-atmosphere__parallax--near">
         <div className="site-atmosphere__wash" />

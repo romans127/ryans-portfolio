@@ -20,6 +20,7 @@ import {
   shouldHideBaseEdge,
 } from "@/lib/flow-diagram-layout";
 import { getLenis } from "@/lib/smooth-scroll";
+import { debugLog } from "@/lib/debug-log";
 
 type FlowDiagramProps = {
   title: string;
@@ -102,6 +103,15 @@ function FlowDiagramFrame({
 
     getLenis()?.stop();
     document.body.style.overflow = "hidden";
+    // #region agent log
+    debugLog(
+      "FlowDiagram.tsx:fullscreen",
+      "Lenis stop on diagram fullscreen",
+      { fullscreen: true, lenisStopped: getLenis()?.isStopped ?? null },
+      "H2",
+      "post-fix",
+    );
+    // #endregion
 
     const onKey = (event: KeyboardEvent) => {
       if (event.key === "Escape") setFullscreen(false);
@@ -112,6 +122,15 @@ function FlowDiagramFrame({
       window.removeEventListener("keydown", onKey);
       document.body.style.overflow = "";
       getLenis()?.start();
+      // #region agent log
+      debugLog(
+        "FlowDiagram.tsx:fullscreen-cleanup",
+        "Lenis start after diagram fullscreen",
+        { fullscreen: false, lenisStopped: getLenis()?.isStopped ?? null },
+        "H2",
+        "post-fix",
+      );
+      // #endregion
     };
   }, [fullscreen]);
 
