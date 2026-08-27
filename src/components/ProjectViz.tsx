@@ -22,8 +22,7 @@ function ReactFlowDiagram({
     <FlowDiagram
       title={title}
       caption={caption}
-      nodes={flow.nodes}
-      edges={flow.edges}
+      chart={flow}
       height={height}
     />
   );

@@ -6,11 +6,12 @@ const flowNode = (
   x: number,
   y: number,
   tone: "signal" | "copper" | "neutral" = "neutral",
+  expandable = false,
 ): Node => ({
   id,
   type: "platform",
   position: { x, y },
-  data: { label, tone },
+  data: { label, tone, expandable },
 });
 
 const flowEdge = (source: string, target: string, label?: string): Edge => ({
@@ -26,6 +27,12 @@ const flowEdge = (source: string, target: string, label?: string): Edge => ({
   labelBgBorderRadius: 4,
 });
 
+export type FlowChartDef = {
+  nodes: Node[];
+  edges: Edge[];
+  expansions?: Record<string, { nodes: Node[]; edges: Edge[] }>;
+};
+
 export const MERMAID_CHARTS: Record<string, string> = {
   "kk-product-pillars": `flowchart TB
     KK["Kingdom Keys"]
@@ -38,6 +45,17 @@ export const MERMAID_CHARTS: Record<string, string> = {
     Typing --> Control
     Writing --> Control`,
 
+  "rr-review-structure": `flowchart LR
+    Search["Search library"]
+    Title["Title page"]
+    Flags["Content flags<br/>violence · language · themes"]
+    Values["Values notes"]
+    Chip["Guidance chip"]
+    Search --> Title --> Flags --> Values --> Chip
+    Chip --> Great["Great for families"]
+    Chip --> Guide["With guidance"]
+    Chip --> No["Not recommended"]`,
+
   "sh-development-pillars": `flowchart TB
     Hub["Stats Hub<br/>Player development"]
     Knowledge["Knowledge<br/>Baseball IQ · Chalk Talk"]
@@ -48,7 +66,7 @@ export const MERMAID_CHARTS: Record<string, string> = {
     Hub --> Team`,
 };
 
-export const FLOW_CHARTS: Record<string, { nodes: Node[]; edges: Edge[] }> = {
+export const FLOW_CHARTS: Record<string, FlowChartDef> = {
   "kk-learner-journey": {
     nodes: [
       flowNode("identity", "Pick explorer<br/>& robot companion", 0, 100, "copper"),
@@ -132,7 +150,7 @@ export const FLOW_CHARTS: Record<string, { nodes: Node[]; edges: Edge[] }> = {
       flowNode("hs", "HubSpot", 0, 80, "copper"),
       flowNode("dbt", "dbt models", 260, 80, "signal"),
       flowNode("ld", "Lightdash", 520, 80, "signal"),
-      flowNode("pipes", "Pipelines", 780, 80, "copper"),
+      flowNode("pipes", "Reverse ETL", 780, 80, "copper"),
       flowNode("rev", "Revenue team", 520, 200, "neutral"),
       flowNode("cs", "CS team", 780, 200, "neutral"),
     ],
@@ -148,8 +166,8 @@ export const FLOW_CHARTS: Record<string, { nodes: Node[]; edges: Edge[] }> = {
   "dvx-agent-stack": {
     nodes: [
       flowNode("dbt", "dbt foundation", 0, 100, "signal"),
-      flowNode("skills", "Skills library", 260, 0, "copper"),
-      flowNode("memory", "Memory structure", 260, 200, "copper"),
+      flowNode("skills", "Skills library", 260, 0, "copper", true),
+      flowNode("memory", "Memory structure", 260, 200, "copper", true),
       flowNode("agents", "Agent runtime", 520, 100, "signal"),
       flowNode("mcp", "MCP servers", 780, 100, "copper"),
       flowNode("apis", "Live APIs", 1040, 100, "neutral"),
@@ -161,6 +179,42 @@ export const FLOW_CHARTS: Record<string, { nodes: Node[]; edges: Edge[] }> = {
       flowEdge("agents", "mcp", "tool calls"),
       flowEdge("mcp", "apis", "live calls"),
     ],
+    expansions: {
+      skills: {
+        nodes: [
+          flowNode("sk-scope", "Repo scope<br/>Stack & boundaries", 60, -180, "neutral"),
+          flowNode("sk-engineer", "Engineer skill<br/>Default feature work", 260, -220, "neutral"),
+          flowNode("sk-database", "Database skill<br/>SQL safety · approvals", 460, -220, "neutral"),
+          flowNode("sk-domain", "Domain skill<br/>Compliance rules", 660, -180, "neutral"),
+        ],
+        edges: [
+          flowEdge("skills", "sk-scope", "per repo"),
+          flowEdge("skills", "sk-engineer", "per repo"),
+          flowEdge("skills", "sk-database", "per repo"),
+          flowEdge("skills", "sk-domain", "per repo"),
+          flowEdge("sk-engineer", "agents", "load on task"),
+          flowEdge("sk-database", "agents", "load on task"),
+          flowEdge("sk-domain", "agents", "load on task"),
+        ],
+      },
+      memory: {
+        nodes: [
+          flowNode("mem-working", "Working memory<br/>Session scratchpad", 60, 340, "neutral"),
+          flowNode("mem-raw", "Raw inputs<br/>Notes · transcripts", 260, 380, "neutral"),
+          flowNode("mem-processed", "Processed<br/>Summaries · actions", 460, 380, "neutral"),
+          flowNode("mem-index", "Index & tags<br/>Priority-weighted recall", 660, 340, "neutral"),
+          flowNode("mem-review", "Spaced review<br/>1d · 7d · 30d", 460, 480, "neutral"),
+        ],
+        edges: [
+          flowEdge("memory", "mem-working", "session"),
+          flowEdge("mem-working", "mem-raw", "promote"),
+          flowEdge("mem-raw", "mem-processed", "summarize"),
+          flowEdge("mem-processed", "mem-index", "tag & rank"),
+          flowEdge("mem-index", "mem-review", "reinforce"),
+          flowEdge("mem-index", "agents", "recall"),
+        ],
+      },
+    },
   },
 
   "prizepicks-data-lifecycle": {
@@ -334,6 +388,6 @@ export function getMermaidChart(id: string): string | undefined {
   return MERMAID_CHARTS[id];
 }
 
-export function getFlowChart(id: string): { nodes: Node[]; edges: Edge[] } | undefined {
+export function getFlowChart(id: string): FlowChartDef | undefined {
   return FLOW_CHARTS[id];
 }

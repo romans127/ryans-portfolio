@@ -5,6 +5,8 @@ import { Handle, Position, type NodeProps } from "@xyflow/react";
 export type PlatformFlowNodeData = {
   label: string;
   tone?: "signal" | "copper" | "neutral";
+  expandable?: boolean;
+  expanded?: boolean;
 };
 
 type ToneStyle = {
@@ -69,6 +71,29 @@ export default function PlatformFlowNode({ data }: NodeProps) {
           {line}
         </span>
       ))}
+      {nodeData.expandable ? (
+        <span
+          style={{
+            position: "absolute",
+            top: -9,
+            right: -9,
+            width: 20,
+            height: 20,
+            borderRadius: 999,
+            background: "#0b1424",
+            border: `1.5px solid ${border}`,
+            color: "#e9eef8",
+            fontSize: 12,
+            fontWeight: 700,
+            lineHeight: "17px",
+            textAlign: "center",
+            cursor: "pointer",
+          }}
+          aria-hidden="true"
+        >
+          {nodeData.expanded ? "−" : "+"}
+        </span>
+      ) : null}
       <Handle
         type="source"
         position={Position.Right}

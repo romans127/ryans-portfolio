@@ -1,37 +1,79 @@
 "use client";
 
-import { useMemo } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   Background,
   BackgroundVariant,
   ReactFlow,
   useEdgesState,
   useNodesState,
-  type Edge,
   type Node,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 import PlatformFlowNode from "@/components/diagrams/PlatformFlowNode";
+import type { FlowChartDef } from "@/lib/platform-diagram-content";
 
 type FlowDiagramProps = {
   title: string;
   caption?: string;
-  nodes: Node[];
-  edges: Edge[];
+  chart: FlowChartDef;
   height?: number;
 };
 
 export default function FlowDiagram({
   title,
   caption,
-  nodes: initialNodes,
-  edges: initialEdges,
+  chart,
   height = 320,
 }: FlowDiagramProps) {
-  const [nodes, , onNodesChange] = useNodesState(initialNodes);
-  const [edges, , onEdgesChange] = useEdgesState(initialEdges);
+  const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set());
+
+  const visibleNodes = useMemo(() => {
+    const expansionNodes = Object.entries(chart.expansions ?? {})
+      .filter(([id]) => expandedIds.has(id))
+      .flatMap(([, expansion]) => expansion.nodes);
+    return [...chart.nodes, ...expansionNodes].map((node) => ({
+      ...node,
+      data: {
+        ...node.data,
+        expanded: expandedIds.has(node.id),
+      },
+    }));
+  }, [chart, expandedIds]);
+
+  const visibleEdges = useMemo(() => {
+    const expansionEdges = Object.entries(chart.expansions ?? {})
+      .filter(([id]) => expandedIds.has(id))
+      .flatMap(([, expansion]) => expansion.edges);
+    return [...chart.edges, ...expansionEdges];
+  }, [chart, expandedIds]);
+
+  const [nodes, setNodes, onNodesChange] = useNodesState(visibleNodes);
+  const [edges, setEdges, onEdgesChange] = useEdgesState(visibleEdges);
+
+  useEffect(() => {
+    setNodes(visibleNodes);
+    setEdges(visibleEdges);
+  }, [visibleNodes, visibleEdges, setNodes, setEdges]);
+
+  const onNodeClick = useCallback(
+    (_event: { target: EventTarget }, node: Node) => {
+      if (!chart.expansions?.[node.id]) return;
+      setExpandedIds((prev) => {
+        const next = new Set(prev);
+        if (next.has(node.id)) {
+          next.delete(node.id);
+        } else {
+          next.add(node.id);
+        }
+        return next;
+      });
+    },
+    [chart],
+  );
 
   const nodeTypes = useMemo(() => ({ platform: PlatformFlowNode }), []);
+  const hasExpandable = Object.keys(chart.expansions ?? {}).length > 0;
 
   return (
     <figure className="panel overflow-hidden rounded-2xl">
@@ -46,6 +88,7 @@ export default function FlowDiagram({
           nodeTypes={nodeTypes}
           onNodesChange={onNodesChange}
           onEdgesChange={onEdgesChange}
+          onNodeClick={onNodeClick}
           nodesDraggable
           nodesConnectable={false}
           elementsSelectable
@@ -63,7 +106,9 @@ export default function FlowDiagram({
         </ReactFlow>
       </div>
       <p className="border-t border-line px-5 py-2 font-mono text-[10px] text-dim md:px-6">
-        Drag nodes to explore the flow
+        {hasExpandable
+          ? "Drag nodes to explore · click + to expand"
+          : "Drag nodes to explore the flow"}
       </p>
     </figure>
   );

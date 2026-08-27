@@ -41,8 +41,7 @@ export default function PlatformDiagrams({ diagrams }: PlatformDiagramsProps) {
               key={diagram.id}
               title={diagram.title}
               caption={diagram.caption}
-              nodes={flow.nodes}
-              edges={flow.edges}
+              chart={flow}
               height={diagram.id === "sh-coach-family-flow" ? 360 : 300}
             />
           );
