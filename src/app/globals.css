@@ -613,6 +613,22 @@ body {
 
 .career-flow-fullscreen {
   background: #0a1220;
+  height: 100dvh;
+  width: 100vw;
+  max-height: 100dvh;
+  max-width: 100vw;
+}
+
+.career-flow--idle .react-flow__pane {
+  cursor: default;
+}
+
+.career-flow--active .react-flow__pane {
+  cursor: grab;
+}
+
+.career-flow--active .react-flow__pane:active {
+  cursor: grabbing;
 }
 
 .career-flow .react-flow__node-career,

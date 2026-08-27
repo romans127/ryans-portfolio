@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import Link from "next/link";
 import {
   Background,
@@ -104,9 +105,11 @@ function FitViewOnChange({
 function CareerTimelineFrame({ roles, consulting }: CareerTimelineProps) {
   const ordered = useMemo(() => orderTimeline(roles, consulting), [roles, consulting]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [engaged, setEngaged] = useState(false);
   const [fullscreen, setFullscreen] = useState(false);
   const [spacerHeight, setSpacerHeight] = useState(0);
   const figureRef = useRef<HTMLElement>(null);
+  const interactive = engaged || fullscreen;
 
   const graph = useMemo(
     () => buildCareerGraph(ordered, selectedId),
@@ -142,18 +145,31 @@ function CareerTimelineFrame({ roles, consulting }: CareerTimelineProps) {
     [ordered],
   );
 
-  const onNodeClick = useCallback((_: unknown, node: Node) => {
-    if (node.type === "career") setSelectedId(node.id);
-  }, []);
+  const engage = useCallback(() => setEngaged(true), []);
 
-  const onPaneClick = useCallback(() => setSelectedId(null), []);
+  const onNodeClick = useCallback(
+    (_: unknown, node: Node) => {
+      engage();
+      if (node.type === "career") setSelectedId(node.id);
+    },
+    [engage],
+  );
+
+  const onPaneClick = useCallback(() => {
+    if (!interactive) {
+      engage();
+      return;
+    }
+    setSelectedId(null);
+  }, [engage, interactive]);
 
   const onSelectionChange = useCallback(
     ({ nodes: selected }: { nodes: Node[]; edges: Edge[] }) => {
+      if (!interactive) return;
       const career = selected.find((node) => node.type === "career");
       if (career) setSelectedId(career.id);
     },
-    [],
+    [interactive],
   );
 
   const onInit = useCallback(
@@ -182,8 +198,11 @@ function CareerTimelineFrame({ roles, consulting }: CareerTimelineProps) {
 
   const toggleFullscreen = useCallback(() => {
     setFullscreen((current) => {
-      if (!current && figureRef.current) {
-        setSpacerHeight(figureRef.current.offsetHeight);
+      if (!current) {
+        setEngaged(true);
+        if (figureRef.current) {
+          setSpacerHeight(figureRef.current.offsetHeight);
+        }
       }
       return !current;
     });
@@ -196,7 +215,13 @@ function CareerTimelineFrame({ roles, consulting }: CareerTimelineProps) {
           setSelectedId(null);
           return;
         }
-        if (fullscreen) setFullscreen(false);
+        if (fullscreen) {
+          setFullscreen(false);
+          return;
+        }
+        if (engaged) {
+          setEngaged(false);
+        }
         return;
       }
       if (!selectedId) return;
@@ -205,26 +230,23 @@ function CareerTimelineFrame({ roles, consulting }: CareerTimelineProps) {
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [selectedId, fullscreen, step]);
+  }, [selectedId, fullscreen, engaged, step]);
 
   const fitViewKey = `${fullscreen}-${selectedId ?? "none"}`;
-  const hint =
+  const idleHint = "Scroll to continue · click the timeline to explore";
+  const activeHint =
     "Drag to pan · pinch or +/− to zoom · click a seat for the story · Esc to close";
+  const hint = interactive ? activeHint : idleHint;
 
-  return (
-    <>
-      {fullscreen ? (
-        <div aria-hidden className="w-full" style={{ height: spacerHeight }} />
-      ) : null}
-
-      <figure
-        ref={figureRef}
-        className={
-          fullscreen
-            ? "career-flow-fullscreen panel fixed inset-0 z-[90] flex flex-col overflow-hidden rounded-none border-0"
-            : "panel-featured overflow-hidden rounded-2xl"
-        }
-      >
+  const figure = (
+    <figure
+      ref={figureRef}
+      className={
+        fullscreen
+          ? "career-flow-fullscreen panel fixed inset-0 z-[90] flex h-dvh w-screen flex-col overflow-hidden rounded-none border-0"
+          : "panel-featured overflow-hidden rounded-2xl"
+      }
+    >
         <figcaption className="flex flex-wrap items-center justify-between gap-3 border-b border-line px-5 py-3.5 md:px-6">
           <p className="kicker">My Journey</p>
           <div className="flex flex-wrap items-center gap-3 md:gap-4">
@@ -252,8 +274,11 @@ function CareerTimelineFrame({ roles, consulting }: CareerTimelineProps) {
         </figcaption>
 
         <div
-          className={`career-flow relative ${fullscreen ? "career-flow--fullscreen" : "h-[540px] md:h-[600px]"}`}
-          data-lenis-prevent
+          className={`career-flow relative ${interactive ? "career-flow--active" : "career-flow--idle"} ${fullscreen ? "career-flow--fullscreen" : "h-[540px] md:h-[600px]"}`}
+          {...(interactive ? { "data-lenis-prevent": true } : {})}
+          onPointerDown={() => {
+            if (!interactive) engage();
+          }}
         >
         <ReactFlow
           nodes={nodes}
@@ -267,12 +292,12 @@ function CareerTimelineFrame({ roles, consulting }: CareerTimelineProps) {
           onInit={onInit}
           nodesDraggable={false}
           nodesConnectable={false}
-          elementsSelectable
+          elementsSelectable={interactive}
           zoomOnScroll={false}
-          zoomOnPinch
+          zoomOnPinch={interactive}
           zoomOnDoubleClick={false}
           panOnScroll={false}
-          panOnDrag
+          panOnDrag={interactive}
           minZoom={0.25}
           maxZoom={fullscreen ? 2 : 1.6}
         >
@@ -305,6 +330,17 @@ function CareerTimelineFrame({ roles, consulting }: CareerTimelineProps) {
             className="max-md:hidden"
           />
         </ReactFlow>
+
+        {!interactive ? (
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-x-0 bottom-0 z-10 flex justify-center bg-gradient-to-t from-panel/90 via-panel/35 to-transparent pb-5 pt-16"
+          >
+            <p className="rounded-full border border-line/80 bg-raised/80 px-3 py-1 font-mono text-[10px] uppercase tracking-wider text-dim backdrop-blur-sm">
+              Click to explore
+            </p>
+          </div>
+        ) : null}
 
         <aside
           role="dialog"
@@ -442,6 +478,19 @@ function CareerTimelineFrame({ roles, consulting }: CareerTimelineProps) {
         {fullscreen ? `${hint} · Esc to exit` : hint}
       </p>
     </figure>
+  );
+
+  return (
+    <>
+      {fullscreen ? (
+        <div aria-hidden className="w-full" style={{ height: spacerHeight }} />
+      ) : null}
+
+      {fullscreen && typeof document !== "undefined"
+        ? createPortal(figure, document.body)
+        : !fullscreen
+          ? figure
+          : null}
     </>
   );
 }
