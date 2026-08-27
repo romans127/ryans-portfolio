@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { ArrowRight, Search, X } from "lucide-react";
 import { searchPortfolio, type SearchResult } from "@/lib/search";
+import { getLenis } from "@/lib/smooth-scroll";
 
 type SearchOverlayProps = {
   open: boolean;
@@ -38,10 +39,12 @@ export default function SearchOverlay({ open, onClose }: SearchOverlayProps) {
     if (open) {
       window.addEventListener("keydown", onKey);
       document.body.style.overflow = "hidden";
+      getLenis()?.stop();
     }
     return () => {
       window.removeEventListener("keydown", onKey);
       document.body.style.overflow = "";
+      getLenis()?.start();
     };
   }, [open, onClose]);
 
@@ -79,7 +82,7 @@ export default function SearchOverlay({ open, onClose }: SearchOverlayProps) {
           </button>
         </div>
 
-        <div className="max-h-[60vh] overflow-y-auto">
+        <div className="max-h-[60vh] overflow-y-auto" data-lenis-prevent>
           {query.trim() === "" ? (
             <div className="px-5 py-8 text-center">
               <p className="text-sm text-stone">
