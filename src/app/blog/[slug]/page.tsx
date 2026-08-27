@@ -27,55 +27,55 @@ export default async function PostPage({
     .filter((line) => line.trim() !== "");
 
   return (
-    <div className="mx-auto max-w-3xl space-y-12 px-6 py-16">
-      <Link href="/blog" className="inline-flex items-center gap-2 text-sm text-stone hover:text-signal">
-        <ArrowLeft size={14} /> All notes
+    <div className="mx-auto max-w-4xl space-y-12 px-6 py-16">
+      <Link href="/blog" className="inline-flex items-center gap-2 text-base text-stone hover:text-signal">
+        <ArrowLeft size={16} /> All notes
       </Link>
 
-      <header className="space-y-4">
+      <header className="space-y-5">
         <div className="flex flex-wrap items-center gap-3">
           <span className="skill-tag">{post.tag}</span>
-          <span className="inline-flex items-center gap-1 text-xs text-dim">
-            <Clock size={11} />
+          <span className="inline-flex items-center gap-1 text-sm text-dim">
+            <Clock size={12} />
             {post.readTime}
           </span>
-          <span className="text-xs text-dim">{post.date}</span>
+          <span className="text-sm text-dim">{post.date}</span>
         </div>
-        <h1 className="display text-3xl text-cream md:text-5xl">{post.title}</h1>
-        <p className="leading-relaxed text-stone">{post.excerpt}</p>
-        <div className="flex items-center gap-3 border-t border-line pt-4">
-          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-copper to-signal text-[10px] font-medium text-ink">
+        <h1 className="display text-4xl text-cream md:text-5xl">{post.title}</h1>
+        <p className="text-lg leading-relaxed text-stone md:text-xl">{post.excerpt}</p>
+        <div className="flex items-center gap-3 border-t border-line pt-5">
+          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-copper to-signal text-xs font-medium text-ink">
             {profile.initials}
           </div>
           <div>
-            <p className="text-xs text-cream">{profile.name}</p>
-            <p className="text-xs text-dim">
+            <p className="text-sm text-cream">{profile.name}</p>
+            <p className="text-sm text-dim">
               {profile.currentRole}, {profile.currentCompany}
             </p>
           </div>
         </div>
       </header>
 
-      <article className="space-y-4">
+      <article className="space-y-6">
         {paragraphs.map((line, index) => {
           if (line.startsWith("## ")) {
             return (
-              <h2 key={index} className="display mt-8 text-2xl text-cream">
+              <h2 key={index} className="display mt-10 text-2xl text-cream md:text-3xl">
                 {line.replace("## ", "")}
               </h2>
             );
           }
           if (line.startsWith("**") && line.endsWith("**")) {
             return (
-              <p key={index} className="text-sm font-medium text-cream">
+              <p key={index} className="text-base font-medium text-cream md:text-lg">
                 {line.replace(/\*\*/g, "")}
               </p>
             );
           }
           if (line.startsWith("- ")) {
             return (
-              <div key={index} className="flex gap-3 text-sm text-stone">
-                <span className="text-signal">▹</span>
+              <div key={index} className="flex gap-3 text-base leading-relaxed text-stone md:text-lg">
+                <span className="mt-1 text-signal">▹</span>
                 <span
                   dangerouslySetInnerHTML={{
                     __html: line
@@ -89,7 +89,7 @@ export default async function PostPage({
           return (
             <p
               key={index}
-              className="text-sm leading-relaxed text-stone"
+              className="text-base leading-[1.75] text-stone md:text-lg"
               dangerouslySetInnerHTML={{
                 __html: line.replace(
                   /\*\*([^*]+)\*\*/g,
@@ -101,18 +101,18 @@ export default async function PostPage({
         })}
       </article>
 
-      <div className="panel flex items-start gap-4 rounded-2xl p-6">
+      <div className="panel flex items-start gap-4 rounded-2xl p-6 md:p-8">
         <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-copper to-signal text-sm text-ink">
           {profile.initials}
         </div>
-        <div className="space-y-1.5">
-          <p className="text-sm text-cream">{profile.name}</p>
-          <p className="text-xs leading-relaxed text-stone">{profile.lede}</p>
+        <div className="space-y-2">
+          <p className="text-base text-cream md:text-lg">{profile.name}</p>
+          <p className="text-base leading-relaxed text-stone">{profile.lede}</p>
           <div className="flex gap-3 pt-1">
-            <a href={profile.linkedin} className="text-xs text-signal" target="_blank" rel="noopener noreferrer">
+            <a href={profile.linkedin} className="text-sm text-signal" target="_blank" rel="noopener noreferrer">
               LinkedIn
             </a>
-            <a href={profile.github} className="text-xs text-signal" target="_blank" rel="noopener noreferrer">
+            <a href={profile.github} className="text-sm text-signal" target="_blank" rel="noopener noreferrer">
               GitHub
             </a>
           </div>
@@ -120,16 +120,16 @@ export default async function PostPage({
       </div>
 
       {related.length > 0 ? (
-        <div className="space-y-3">
+        <div className="space-y-4">
           <p className="kicker">More writing</p>
           {related.map((item) => (
             <Link
               key={item.slug}
               href={`/blog/${item.slug}`}
-              className="panel card-hover block rounded-2xl p-4"
+              className="panel card-hover block rounded-2xl p-5 md:p-6"
             >
-              <span className="font-mono text-[11px] text-copper">{item.tag}</span>
-              <p className="mt-1 text-sm text-cream">{item.title}</p>
+              <span className="font-mono text-xs text-copper">{item.tag}</span>
+              <p className="mt-2 text-base text-cream md:text-lg">{item.title}</p>
             </Link>
           ))}
         </div>
