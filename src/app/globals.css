@@ -601,6 +601,20 @@ body {
   background: transparent;
 }
 
+.career-flow--fullscreen {
+  flex: 1;
+  min-height: 0;
+}
+
+.career-flow--fullscreen .react-flow {
+  height: 100%;
+  background: #0a1220;
+}
+
+.career-flow-fullscreen {
+  background: #0a1220;
+}
+
 .career-flow .react-flow__node-career,
 .career-flow .react-flow__node-yearTick {
   background: transparent;

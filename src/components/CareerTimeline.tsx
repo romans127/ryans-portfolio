@@ -16,7 +16,7 @@ import {
   type Node,
   type ReactFlowInstance,
 } from "@xyflow/react";
-import { ArrowLeft, ArrowRight, ArrowUpRight, X } from "lucide-react";
+import { ArrowLeft, ArrowRight, ArrowUpRight, Maximize2, Minimize2, X } from "lucide-react";
 import "@xyflow/react/dist/style.css";
 import CareerNode from "@/components/diagrams/CareerNode";
 import YearTickNode from "@/components/diagrams/YearTickNode";
@@ -29,6 +29,7 @@ import {
   startYearOf,
   xForYear,
 } from "@/lib/career-timeline";
+import { getLenis } from "@/lib/smooth-scroll";
 import type { Role } from "@/lib/site";
 
 type CareerTimelineProps = {
@@ -36,7 +37,13 @@ type CareerTimelineProps = {
   consulting: Role[];
 };
 
-function CameraRig({ selectedId }: { selectedId: string | null }) {
+function CameraRig({
+  selectedId,
+  fullscreen,
+}: {
+  selectedId: string | null;
+  fullscreen: boolean;
+}) {
   const { getNodes, setCenter, fitView } = useReactFlow();
   const previousRef = useRef<string | null>(null);
 
@@ -48,11 +55,13 @@ function CameraRig({ selectedId }: { selectedId: string | null }) {
       const node = getNodes().find((candidate) => candidate.id === selectedId);
       if (!node) return;
       const mobile = window.innerWidth < 768;
-      const zoom = mobile ? 0.85 : 1;
+      const zoom = fullscreen ? (mobile ? 1 : 1.1) : mobile ? 0.85 : 1;
       const centerX =
         node.position.x + CAREER_CARD_WIDTH / 2 + (mobile ? 0 : 230 / zoom);
       const centerY =
-        node.position.y + CAREER_CARD_HEIGHT / 2 + (mobile ? -150 : 0);
+        node.position.y +
+        CAREER_CARD_HEIGHT / 2 +
+        (mobile ? -150 : 0);
       const timer = window.setTimeout(() => {
         setCenter(centerX, centerY, { zoom, duration: 450 });
       }, 30);
@@ -61,11 +70,33 @@ function CameraRig({ selectedId }: { selectedId: string | null }) {
 
     if (previous && window.innerWidth >= 768) {
       const timer = window.setTimeout(() => {
-        fitView({ padding: 0.14, duration: 450 });
+        fitView({ padding: fullscreen ? 0.1 : 0.14, duration: 450 });
       }, 30);
       return () => window.clearTimeout(timer);
     }
-  }, [selectedId, getNodes, setCenter, fitView]);
+  }, [selectedId, fullscreen, getNodes, setCenter, fitView]);
+
+  return null;
+}
+
+function FitViewOnChange({
+  fitViewKey,
+  fullscreen,
+  selectedId,
+}: {
+  fitViewKey: string;
+  fullscreen: boolean;
+  selectedId: string | null;
+}) {
+  const { fitView } = useReactFlow();
+
+  useEffect(() => {
+    if (selectedId) return;
+    const timer = window.setTimeout(() => {
+      fitView({ padding: fullscreen ? 0.1 : 0.12, duration: 400 });
+    }, 80);
+    return () => window.clearTimeout(timer);
+  }, [fitView, fitViewKey, fullscreen, selectedId]);
 
   return null;
 }
@@ -73,6 +104,9 @@ function CameraRig({ selectedId }: { selectedId: string | null }) {
 function CareerTimelineFrame({ roles, consulting }: CareerTimelineProps) {
   const ordered = useMemo(() => orderTimeline(roles, consulting), [roles, consulting]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [fullscreen, setFullscreen] = useState(false);
+  const [spacerHeight, setSpacerHeight] = useState(0);
+  const figureRef = useRef<HTMLElement>(null);
 
   const graph = useMemo(
     () => buildCareerGraph(ordered, selectedId),
@@ -135,33 +169,92 @@ function CareerTimelineFrame({ roles, consulting }: CareerTimelineProps) {
   );
 
   useEffect(() => {
-    if (!selectedId) return;
+    if (!fullscreen) return;
+
+    getLenis()?.stop();
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      document.body.style.overflow = "";
+      getLenis()?.start();
+    };
+  }, [fullscreen]);
+
+  const toggleFullscreen = useCallback(() => {
+    setFullscreen((current) => {
+      if (!current && figureRef.current) {
+        setSpacerHeight(figureRef.current.offsetHeight);
+      }
+      return !current;
+    });
+  }, []);
+
+  useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setSelectedId(null);
+      if (event.key === "Escape") {
+        if (selectedId) {
+          setSelectedId(null);
+          return;
+        }
+        if (fullscreen) setFullscreen(false);
+        return;
+      }
+      if (!selectedId) return;
       if (event.key === "ArrowRight") step(1);
       if (event.key === "ArrowLeft") step(-1);
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [selectedId, step]);
+  }, [selectedId, fullscreen, step]);
+
+  const fitViewKey = `${fullscreen}-${selectedId ?? "none"}`;
+  const hint =
+    "Drag to pan · pinch or +/− to zoom · click a seat for the story · Esc to close";
 
   return (
-    <figure className="panel-featured overflow-hidden rounded-2xl">
-      <figcaption className="flex flex-wrap items-center justify-between gap-3 border-b border-line px-5 py-3.5 md:px-6">
-        <p className="kicker">My Journey</p>
-        <div className="flex flex-wrap items-center gap-4 font-mono text-[10px] uppercase tracking-wider text-dim">
-          <span className="inline-flex items-center gap-1.5">
-            <span className="h-1.5 w-1.5 rounded-full bg-signal" />
-            Full-time seat
-          </span>
-          <span className="inline-flex items-center gap-1.5">
-            <span className="h-1.5 w-1.5 rounded-full bg-copper" />
-            Consulting
-          </span>
-        </div>
-      </figcaption>
+    <>
+      {fullscreen ? (
+        <div aria-hidden className="w-full" style={{ height: spacerHeight }} />
+      ) : null}
 
-      <div className="career-flow relative h-[540px] md:h-[600px]">
+      <figure
+        ref={figureRef}
+        className={
+          fullscreen
+            ? "career-flow-fullscreen panel fixed inset-0 z-[90] flex flex-col overflow-hidden rounded-none border-0"
+            : "panel-featured overflow-hidden rounded-2xl"
+        }
+      >
+        <figcaption className="flex flex-wrap items-center justify-between gap-3 border-b border-line px-5 py-3.5 md:px-6">
+          <p className="kicker">My Journey</p>
+          <div className="flex flex-wrap items-center gap-3 md:gap-4">
+            <div className="flex flex-wrap items-center gap-4 font-mono text-[10px] uppercase tracking-wider text-dim">
+              <span className="inline-flex items-center gap-1.5">
+                <span className="h-1.5 w-1.5 rounded-full bg-signal" />
+                Full-time seat
+              </span>
+              <span className="inline-flex items-center gap-1.5">
+                <span className="h-1.5 w-1.5 rounded-full bg-copper" />
+                Consulting
+              </span>
+            </div>
+            <button
+              type="button"
+              onClick={toggleFullscreen}
+              className="inline-flex shrink-0 items-center gap-2 rounded-full border border-line px-3 py-1.5 font-mono text-[10px] text-stone transition-colors hover:border-signal/30 hover:text-cream"
+              aria-label={fullscreen ? "Exit full screen" : "Open full screen"}
+              aria-pressed={fullscreen}
+            >
+              {fullscreen ? <Minimize2 size={14} /> : <Maximize2 size={14} />}
+              <span>{fullscreen ? "Exit" : "Full screen"}</span>
+            </button>
+          </div>
+        </figcaption>
+
+        <div
+          className={`career-flow relative ${fullscreen ? "career-flow--fullscreen" : "h-[540px] md:h-[600px]"}`}
+          data-lenis-prevent
+        >
         <ReactFlow
           nodes={nodes}
           edges={edges}
@@ -181,9 +274,14 @@ function CareerTimelineFrame({ roles, consulting }: CareerTimelineProps) {
           panOnScroll={false}
           panOnDrag
           minZoom={0.25}
-          maxZoom={1.6}
+          maxZoom={fullscreen ? 2 : 1.6}
         >
-          <CameraRig selectedId={selectedId} />
+          <CameraRig selectedId={selectedId} fullscreen={fullscreen} />
+          <FitViewOnChange
+            fitViewKey={fitViewKey}
+            fullscreen={fullscreen}
+            selectedId={selectedId}
+          />
           <Background
             variant={BackgroundVariant.Dots}
             gap={20}
@@ -341,10 +439,10 @@ function CareerTimelineFrame({ roles, consulting }: CareerTimelineProps) {
       </div>
 
       <p className="border-t border-line px-5 py-2 font-mono text-[10px] text-dim md:px-6">
-        Drag to pan · pinch or +/− to zoom · click a seat for the story · Esc to
-        close
+        {fullscreen ? `${hint} · Esc to exit` : hint}
       </p>
     </figure>
+    </>
   );
 }
 
