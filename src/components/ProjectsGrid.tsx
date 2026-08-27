@@ -10,7 +10,7 @@ const filters = [
   { id: "all", label: "All" },
   { id: "open-source", label: "Open source" },
   { id: "platforms", label: "Platforms" },
-  { id: "shipped", label: "Company work" },
+  { id: "shipped", label: "Solutions" },
 ] as const;
 
 type FilterId = (typeof filters)[number]["id"];
@@ -86,24 +86,27 @@ export default function ProjectsGrid({ projects }: ProjectsGridProps) {
       ) : (
         <>
           {featured.length > 0 ? (
-            <div className="space-y-4">
+            <div className="grid gap-4 md:grid-cols-2">
               {featured.map((project) => (
                 <Reveal key={project.slug}>
                   <Link
                     href={`/projects/${project.slug}`}
-                    className="panel card-hover block rounded-2xl p-6 md:p-8"
+                    className="panel panel-featured card-hover relative flex h-full flex-col overflow-hidden rounded-2xl p-6 md:p-8"
                   >
                     <div className="flex flex-wrap items-center gap-2">
+                      <span className="skill-tag border-signal/60 bg-signal/15 text-signal">Featured</span>
                       <span className="skill-tag">{project.kind}</span>
                       <span className="skill-tag">{project.year}</span>
                       {project.company ? (
                         <span className="skill-tag text-copper">{project.company}</span>
                       ) : null}
                     </div>
-                    <h2 className="display mt-4 text-3xl text-cream md:text-5xl">
+                    <h2 className="display mt-4 text-2xl text-cream md:text-3xl">
                       {project.title}
                     </h2>
-                    <p className="mt-3 max-w-2xl text-base text-stone">{project.oneLiner}</p>
+                    <p className="mt-3 flex-1 text-sm leading-relaxed text-stone">
+                      {project.oneLiner}
+                    </p>
                     <p className="mt-4 inline-flex items-center gap-2 text-sm text-signal">
                       Case study <ArrowUpRight size={14} />
                     </p>

@@ -12,7 +12,7 @@ const recent = roles.filter((role) => role.type === "Full-time").slice(0, 3);
 export default function Home() {
   return (
     <div className="mx-auto max-w-6xl space-y-28 px-6 py-16 md:py-20">
-      <section className="grid items-end gap-10 lg:grid-cols-[1.15fr_0.85fr]">
+      <section className="grid items-end gap-10 lg:grid-cols-[1.05fr_0.95fr]">
         <div className="animate-fade-in space-y-7">
           <div className="flex flex-wrap items-center gap-3">
             <span className="inline-flex items-center gap-2 rounded-full border border-signal/25 bg-signal/10 px-3 py-1 font-mono text-[11px] text-signal">
@@ -135,10 +135,12 @@ export default function Home() {
               <div className="border-t border-line bg-raised/40 p-6 md:border-l md:border-t-0 md:p-8">
                 <p className="kicker">Why Go</p>
                 <ul className="mt-4 space-y-3">
-                  {featured.engineering.slice(0, 3).map((line) => (
-                    <li key={line} className="flex gap-3 text-sm text-stone">
+                  {featured.solution.slice(0, 3).map((item) => (
+                    <li key={item.title} className="flex gap-3 text-sm text-stone">
                       <span className="mt-1 text-signal">▹</span>
-                      <span>{line}</span>
+                      <span>
+                        <span className="text-cream">{item.title}.</span> {item.body}
+                      </span>
                     </li>
                   ))}
                 </ul>

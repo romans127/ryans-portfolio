@@ -32,7 +32,6 @@ export default function FlowDiagram({
   const [edges, , onEdgesChange] = useEdgesState(initialEdges);
 
   const nodeTypes = useMemo(() => ({ platform: PlatformFlowNode }), []);
-  const proOptions = useMemo(() => ({ hideAttribution: true }), []);
 
   return (
     <figure className="panel overflow-hidden rounded-2xl">
@@ -54,7 +53,6 @@ export default function FlowDiagram({
           fitViewOptions={{ padding: 0.2 }}
           minZoom={0.5}
           maxZoom={1.4}
-          proOptions={proOptions}
         >
           <Background
             variant={BackgroundVariant.Dots}

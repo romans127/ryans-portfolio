@@ -9,7 +9,7 @@ type NodeId =
   | "warehouse"
   | "dbt"
   | "bi"
-  | "reverse"
+  | "pipelines"
   | "agents"
   | "mcp"
   | "apis";
@@ -25,87 +25,100 @@ type PipelineNode = {
   external?: boolean;
 };
 
+const NODE_W = 140;
+const NODE_H = 44;
+const NODE_RX = 10;
+const NODE_FONT = 13;
+
+type PipelineEdge = {
+  from: NodeId;
+  to: NodeId;
+  label?: string;
+  bend?: number;
+};
+
 const nodes: PipelineNode[] = [
   {
     id: "sources",
     label: "Sources",
-    x: 48,
-    y: 42,
+    x: 24,
+    y: 28,
     tone: "copper",
-    href: "/projects/cork-threat-detection",
-    destination: "Cork threat-detection pipelines",
+    href: "/projects/realtime-threat-detection",
+    destination: "Streaming ingest, CDC & OSINT feeds",
   },
   {
     id: "warehouse",
     label: "Warehouse",
-    x: 210,
-    y: 42,
+    x: 196,
+    y: 28,
     tone: "signal",
-    href: "/projects/vitable-warehouse",
-    destination: "Vitable GTM warehouse",
+    href: "/projects/gtm-revenue-warehouse",
+    destination: "BigQuery, Postgres & lakehouse storage",
   },
   {
     id: "dbt",
-    label: "dbt models",
-    x: 380,
-    y: 42,
+    label: "Models (dbt)",
+    x: 368,
+    y: 28,
     tone: "signal",
-    href: "/projects/vitable-warehouse",
-    destination: "HubSpot renewal & expansion models",
+    href: "/projects/gtm-revenue-warehouse",
+    destination: "Semantic models, marts & governed metrics",
   },
   {
     id: "bi",
-    label: "Lightdash",
-    x: 550,
+    label: "BI (Lightdash)",
+    x: 540,
     y: 28,
     tone: "copper",
-    href: "/projects/vitable-warehouse",
-    destination: "Self-serve BI for Finance & Ops",
+    href: "/projects/gtm-revenue-warehouse",
+    destination: "Self-serve explores, dashboards & KPIs",
   },
   {
-    id: "reverse",
-    label: "Hightouch",
-    x: 550,
-    y: 92,
+    id: "pipelines",
+    label: "Data pipelines",
+    x: 110,
+    y: 118,
     tone: "copper",
-    href: "/projects/vitable-warehouse",
-    destination: "Reverse ETL into HubSpot",
+    href: "/projects/billing-medallion-migration",
+    destination: "Source ingest into the warehouse and reverse ETL back out",
   },
   {
     id: "agents",
     label: "Agents",
-    x: 210,
-    y: 148,
+    x: 196,
+    y: 220,
     tone: "copper",
-    href: "/projects/dvx-agents",
-    destination: "DVx agent + MCP stack",
+    href: "/projects/agent-mcp-stack",
+    destination: "Agent runtimes, skills & tool routing",
   },
   {
     id: "mcp",
-    label: "MCP / Go",
-    x: 380,
-    y: 148,
+    label: "MCP",
+    x: 368,
+    y: 220,
     tone: "signal",
     href: "/projects/mcp-openapi-proxy",
-    destination: "MCP OpenAPI Proxy case study",
+    destination: "OpenAPI specs → typed MCP tool servers",
   },
   {
     id: "apis",
     label: "Live APIs",
-    x: 550,
-    y: 148,
+    x: 540,
+    y: 220,
     tone: "copper",
     href: "https://github.com/romans127/mcp-openapi-proxy-go",
-    destination: "Open-source Go repo",
+    destination: "Production HTTP endpoints agents call",
     external: true,
   },
 ];
 
-const edges: { from: NodeId; to: NodeId }[] = [
-  { from: "sources", to: "warehouse" },
+const edges: PipelineEdge[] = [
+  { from: "sources", to: "pipelines", label: "ingest" },
+  { from: "pipelines", to: "warehouse", label: "load" },
+  { from: "warehouse", to: "pipelines", label: "reverse ETL", bend: 46 },
   { from: "warehouse", to: "dbt" },
   { from: "dbt", to: "bi" },
-  { from: "dbt", to: "reverse" },
   { from: "warehouse", to: "agents" },
   { from: "dbt", to: "agents" },
   { from: "agents", to: "mcp" },
@@ -115,7 +128,32 @@ const edges: { from: NodeId; to: NodeId }[] = [
 function center(id: NodeId) {
   const node = nodes.find((item) => item.id === id);
   if (!node) return { x: 0, y: 0 };
-  return { x: node.x + 52, y: node.y + 16 };
+  return { x: node.x + NODE_W / 2, y: node.y + NODE_H / 2 };
+}
+
+function edgePath(
+  from: { x: number; y: number },
+  to: { x: number; y: number },
+  bend = 0,
+) {
+  if (!bend) return `M ${from.x} ${from.y} L ${to.x} ${to.y}`;
+  const controlX = (from.x + to.x) / 2 + bend;
+  const controlY = (from.y + to.y) / 2 + Math.abs(bend) * 0.25;
+  return `M ${from.x} ${from.y} Q ${controlX} ${controlY} ${to.x} ${to.y}`;
+}
+
+function edgeLabelPoint(
+  from: { x: number; y: number },
+  to: { x: number; y: number },
+  bend = 0,
+) {
+  if (!bend) {
+    return { x: (from.x + to.x) / 2, y: (from.y + to.y) / 2 - 8 };
+  }
+  return {
+    x: (from.x + to.x) / 2 + bend * 0.45,
+    y: (from.y + to.y) / 2 + Math.abs(bend) * 0.12,
+  };
 }
 
 export default function PipelineCanvas() {
@@ -143,7 +181,7 @@ export default function PipelineCanvas() {
   }
 
   return (
-    <div className="panel relative overflow-hidden rounded-2xl p-4 md:p-5">
+    <div className="panel relative overflow-hidden rounded-2xl p-5 md:p-6">
       <div className="mb-3 flex items-center justify-between gap-3">
         <div>
           <p className="kicker">Control plane</p>
@@ -158,26 +196,41 @@ export default function PipelineCanvas() {
       </div>
 
       <svg
-        viewBox="0 0 660 196"
-        className="hidden h-auto w-full md:block"
+        viewBox="0 0 704 288"
+        className="hidden min-h-[320px] w-full md:block"
         role="navigation"
-        aria-label="Interactive pipeline navigation from sources through warehouse, dbt, BI, reverse ETL, agents, MCP, and live APIs"
+        aria-label="Interactive pipeline navigation: sources through data pipelines into the warehouse, reverse ETL back out, then models, BI, agents, MCP, and live APIs"
       >
         {edges.map((edge) => {
           const a = center(edge.from);
           const b = center(edge.to);
           const lit = active === edge.from || active === edge.to;
+          const labelPoint = edge.label
+            ? edgeLabelPoint(a, b, edge.bend)
+            : null;
           return (
-            <line
-              key={`${edge.from}-${edge.to}`}
-              x1={a.x}
-              y1={a.y}
-              x2={b.x}
-              y2={b.y}
-              className={lit ? "flow-edge" : undefined}
-              stroke={lit ? "#4cc9f0" : "#1e2c47"}
-              strokeWidth={lit ? 1.6 : 1}
-            />
+            <g key={`${edge.from}-${edge.to}-${edge.label ?? "edge"}`}>
+              <path
+                d={edgePath(a, b, edge.bend)}
+                fill="none"
+                className={lit ? "flow-edge" : undefined}
+                stroke={lit ? "#4cc9f0" : "#1e2c47"}
+                strokeWidth={lit ? 1.6 : 1}
+              />
+              {labelPoint ? (
+                <text
+                  x={labelPoint.x}
+                  y={labelPoint.y}
+                  textAnchor="middle"
+                  fill={lit ? "#4cc9f0" : "#6b7c99"}
+                  fontSize="9"
+                  fontFamily="IBM Plex Mono, ui-monospace, monospace"
+                  className="pointer-events-none select-none"
+                >
+                  {edge.label}
+                </text>
+              ) : null}
+            </g>
           );
         })}
         {nodes.map((node) => {
@@ -207,19 +260,19 @@ export default function PipelineCanvas() {
               <rect
                 x={node.x}
                 y={node.y}
-                width={104}
-                height={32}
-                rx={8}
+                width={NODE_W}
+                height={NODE_H}
+                rx={NODE_RX}
                 fill={fill}
                 stroke={stroke}
                 className="transition-[fill,stroke] duration-200"
               />
               <text
-                x={node.x + 52}
-                y={node.y + 21}
+                x={node.x + NODE_W / 2}
+                y={node.y + NODE_H / 2 + 4}
                 textAnchor="middle"
                 fill={lit ? "#e9eef8" : "#a2b0ca"}
-                fontSize="11"
+                fontSize={NODE_FONT}
                 fontFamily="IBM Plex Mono, ui-monospace, monospace"
                 className="pointer-events-none select-none"
               >
@@ -240,7 +293,7 @@ export default function PipelineCanvas() {
               onMouseEnter={() => setActive(node.id)}
               onFocus={() => setActive(node.id)}
               onClick={() => navigate(node)}
-              className={`rounded-lg border px-3 py-2 text-left font-mono text-[11px] transition-colors ${
+              className={`rounded-lg border px-3 py-2.5 text-left font-mono text-xs transition-colors ${
                 lit
                   ? "border-signal/50 bg-signal/10 text-cream"
                   : "border-line bg-panel text-stone hover:border-signal/30"

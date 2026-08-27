@@ -88,33 +88,6 @@ function TierDiagram({
   );
 }
 
-function MetricsGrid({
-  title,
-  items,
-}: Extract<ProjectVizSpec, { type: "metrics" }>) {
-  return (
-    <figure className="panel rounded-2xl p-5 md:p-6">
-      {title ? <figcaption className="kicker mb-4">{title}</figcaption> : null}
-      <div className="grid gap-3 sm:grid-cols-2">
-        {items.map((item) => (
-          <div
-            key={item.label}
-            className="rounded-xl border border-line bg-raised/50 p-4 text-center"
-          >
-            <p className="display text-3xl text-cream">{item.value}</p>
-            <p className="mt-1 font-mono text-[11px] uppercase tracking-wider text-dim">
-              {item.label}
-            </p>
-            {item.detail ? (
-              <p className="mt-2 text-xs leading-relaxed text-stone">{item.detail}</p>
-            ) : null}
-          </div>
-        ))}
-      </div>
-    </figure>
-  );
-}
-
 function CompareChart({
   title,
   caption,
@@ -147,8 +120,6 @@ export default function ProjectViz({ spec }: { spec: ProjectVizSpec }) {
       return <BarChart {...spec} />;
     case "tiers":
       return <TierDiagram {...spec} />;
-    case "metrics":
-      return <MetricsGrid {...spec} />;
     case "compare":
       return <CompareChart {...spec} />;
     default: {

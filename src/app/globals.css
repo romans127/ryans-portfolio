@@ -270,6 +270,38 @@ body {
   box-shadow: 0 18px 50px -28px #4cc9f066;
 }
 
+.panel-featured {
+  position: relative;
+  border: 1px solid transparent;
+  background:
+    linear-gradient(
+        160deg,
+        color-mix(in srgb, #0a1220 80%, transparent) 0%,
+        color-mix(in srgb, #0f1a2e 85%, transparent) 100%
+      )
+      padding-box,
+    linear-gradient(135deg, #4cc9f099 0%, #1e2c47 45%, #f0b25c80 100%) border-box;
+  box-shadow: 0 0 64px -20px #4cc9f080;
+}
+
+.panel-featured::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #4cc9f0, #f0b25c);
+  opacity: 0.9;
+}
+
+.panel-featured:hover {
+  border-color: transparent;
+  box-shadow:
+    0 22px 60px -24px #4cc9f0a6,
+    0 0 44px -12px #f0b25c59;
+}
+
 .skill-tag {
   display: inline-flex;
   align-items: center;
@@ -523,6 +555,18 @@ body {
 
 .platform-flow .react-flow__edge-text {
   fill: #a2b0ca;
+}
+
+.platform-flow .react-flow__attribution {
+  background: rgb(15 26 46 / 80%);
+  border-radius: 6px;
+  font-size: 10px;
+  opacity: 0.7;
+  padding: 2px 4px;
+}
+
+.platform-flow .react-flow__attribution a {
+  color: #a2b0ca;
 }
 
 .mermaid-shell svg {

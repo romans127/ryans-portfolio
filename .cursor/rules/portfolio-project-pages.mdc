@@ -1,0 +1,19 @@
+---
+description: Project page conventions for the portfolio — slugs, storytelling, IP hygiene, diagrams, and hero headers.
+alwaysApply: true
+---
+
+# Portfolio project pages
+
+When adding or editing projects in `src/lib/site.ts`:
+
+- **Slugs never contain company names.** Use solution-focused slugs like `gtm-revenue-warehouse`, not `vitable-warehouse`.
+- **Company attribution** goes in the `company` field only; it renders as a copper pill.
+- **Title, one-liner, Problem, and Approach** focus on the problem and your implemented solution, not the employer.
+- **IP hygiene:** no employer-internal system names, table names, squad names, or prescriptive operational details. Common third-party tools (dbt, Airflow, BigQuery, Braze, Looker, etc.) are fine.
+- **Architecture diagrams** use React Flow for flows/processes and Mermaid for simple hierarchies. Define them in `src/lib/platform-diagram-content.ts`.
+- **React Flow tones:** `copper` = source/input (pill), `signal` = process/transform (rounded box), `neutral` = leaf/output (dashed tag).
+- **Solution highlights** recap the outcome after the diagram.
+- **Hero headers** are unique per project and only added when explicitly requested; they are not tied to the `Platform` kind.
+
+See `.cursor/skills/portfolio-project-pages/SKILL.md` for the full authoring checklist.

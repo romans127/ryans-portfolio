@@ -125,15 +125,15 @@ export default async function ProjectPage({
       ) : null}
 
       <section className="space-y-4">
-        <p className="kicker">{isPlatform ? "Features" : "Engineering"}</p>
-        <ul className="space-y-3">
-          {project.engineering.map((line) => (
-            <li key={line} className="panel flex gap-3 rounded-2xl p-4 text-sm text-stone">
-              <span className="text-signal">▹</span>
-              <span>{line}</span>
-            </li>
+        <p className="kicker">{isPlatform ? "Features" : "Solution highlights"}</p>
+        <div className="grid gap-4 md:grid-cols-2">
+          {project.solution.map((item) => (
+            <article key={item.title} className="panel rounded-2xl p-5">
+              <h2 className="text-sm font-medium text-cream">{item.title}</h2>
+              <p className="mt-2 text-sm leading-relaxed text-stone">{item.body}</p>
+            </article>
           ))}
-        </ul>
+        </div>
       </section>
 
       {platform ? (

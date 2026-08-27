@@ -10,7 +10,7 @@ export const profile = {
   currentCompany: "Vitable Health",
   previousRole: "Head of Artificial Intelligence",
   previousCompany: "DVx Ventures",
-  title: "Director of Data · Head of AI",
+  title: "Principal AI & Data Engineer",
   eyebrow: "Warehouse · Agents · MCP",
   headline: "I build the layer agents stand on.",
   lede: "Seventeen years of warehouse and cloud work, then Head of AI at DVx, then founding Director of Data at Vitable. I still write the dbt and Terraform myself, and I still take the IC ticket when a team is blocked.",
@@ -272,11 +272,6 @@ export type ProjectViz =
       }[];
     }
   | {
-      type: "metrics";
-      title?: string;
-      items: { label: string; value: string; detail?: string }[];
-    }
-  | {
       type: "compare";
       title: string;
       caption?: string;
@@ -310,7 +305,7 @@ export type Project = {
   oneLiner: string;
   problem: string;
   approach: string;
-  engineering: string[];
+  solution: { title: string; body: string }[];
   tags: string[];
   href?: string;
   repo?: string;
@@ -332,11 +327,23 @@ export const projects: Project[] = [
       "Agents need live APIs, not screenshots of docs. Most OpenAPI-to-tool bridges are slow, parse the spec on every request, or hide auth behind a single happy path.",
     approach:
       "Write the proxy in Go. Share one HTTP client. Pool connections. Parse the spec once at startup. Expose every operation as a named tool with Bearer, API key, custom headers, and SSL options.",
-    engineering: [
-      "Dynamic tool generation from OpenAPI 3 specs, including $ref resolution and path-parameter handling.",
-      "Tool names encode method and path so agents can tell api_GET_users from api_POST_admin_posts.",
-      "Include/exclude regex filters and a 40-character name cap for Cursor's combined tool limit.",
-      "Optional crawler that infers an OpenAPI 3.0.3 spec from a live API when you do not already have one.",
+    solution: [
+      {
+        title: "Spec-driven tool generation",
+        body: "OpenAPI 3 specs parsed once at startup — $ref resolution and path-parameter handling included — so every operation becomes a named tool.",
+      },
+      {
+        title: "Agent-legible tool names",
+        body: "Names encode method and path (api_GET_users vs api_POST_admin_posts), with include/exclude regex filters and a 40-character cap for Cursor's combined tool limit.",
+      },
+      {
+        title: "One fast HTTP core",
+        body: "A single shared Go HTTP client with connection pooling keeps tool calls cheap under agent load.",
+      },
+      {
+        title: "Crawler fallback",
+        body: "When no spec exists, an optional crawler infers an OpenAPI 3.0.3 spec from the live API.",
+      },
     ],
     tags: ["Go", "MCP", "OpenAPI", "Agents"],
     href: "https://github.com/romans127/mcp-openapi-proxy-go",
@@ -364,12 +371,27 @@ export const projects: Project[] = [
       "Kids quit joyless typing drills, and arcade-style games do not give adults a clear picture of whether anyone is learning. Families and classrooms needed practice kids would stick with — and progress adults could actually see.",
     approach:
       "Wrap typing practice in a space adventure kids want to finish, then give parents and teachers a shared dashboard for speed, accuracy, and assignments. Add a Writing Portal so school papers live beside the typing journey — coached, not ghost-written.",
-    engineering: [
-      "Planet missions and mini-games keyed to grade level, with gems, streaks, and achievements that reward consistency.",
-      "Explorer identities and robot companions so practice feels like a world, not a worksheet.",
-      "Mission Control for parents and teachers — per-student WPM, accuracy, lesson completion, and class-wide progress.",
-      "Writing Portal beta: essays and assignments on the same account, with a writing coach that keeps the student's voice.",
-      "Homeschool and classroom modes, including Arizona ESA / ClassWallet-friendly positioning.",
+    solution: [
+      {
+        title: "Missions kids actually finish",
+        body: "Planet missions and mini-games keyed to grade level, with gems, streaks, and achievements that reward consistency.",
+      },
+      {
+        title: "A world, not a worksheet",
+        body: "Explorer identities and robot companions make practice feel like play.",
+      },
+      {
+        title: "Mission Control",
+        body: "Parents and teachers share one view — per-student WPM, accuracy, lesson completion, and class-wide progress.",
+      },
+      {
+        title: "Writing Portal",
+        body: "Essays and assignments on the same account, with a writing coach that keeps the student's voice.",
+      },
+      {
+        title: "Homeschool & classroom modes",
+        body: "Built for families and schools alike, including Arizona ESA / ClassWallet-friendly positioning.",
+      },
     ],
     tags: ["Next.js", "Typing", "EdTech", "Homeschool", "Writing"],
     href: "https://www.kingdomkeys.xyz",
@@ -421,11 +443,23 @@ export const projects: Project[] = [
       "Parents needed a fast way to vet entertainment before kids hit play. Critic scores measure taste, not fit for your household. Existing guides mix opinion with facts and rarely give a clear yes / caution / no signal.",
     approach:
       "A searchable public library where every title gets the same structured review — content flags, theme notes, and a scannable guidance chip (Great for families, With guidance, Not recommended). Families decide from facts, not hype.",
-    engineering: [
-      "Searchable library with genre filters, curated carousels, and family-picks collections.",
-      "Structured title pages: violence, language, themes, and worldview notes in a fixed layout every time.",
-      "Three guidance chips replace star ratings — one glance before anyone presses play.",
-      "Free, account-based platform evolved from a private family tool used for two years.",
+    solution: [
+      {
+        title: "Searchable library",
+        body: "Genre filters, curated carousels, and family-picks collections.",
+      },
+      {
+        title: "Structured title pages",
+        body: "Violence, language, themes, and worldview notes in a fixed layout every time.",
+      },
+      {
+        title: "Guidance chips",
+        body: "Three chips replace star ratings — one glance before anyone presses play.",
+      },
+      {
+        title: "Free accounts",
+        body: "Account-based platform evolved from a private family tool used for two years.",
+      },
     ],
     tags: ["Family", "Reviews", "Next.js", "Content"],
     href: "https://righteous.reviews",
@@ -449,13 +483,6 @@ export const projects: Project[] = [
       stack: ["Next.js", "React", "TypeScript", "Tailwind"],
       diagrams: [
         {
-          id: "rr-review-structure",
-          kind: "mermaid",
-          title: "What every review includes",
-          caption:
-            "Same structure on every title — facts first, then a single guidance outcome.",
-        },
-        {
           id: "rr-parent-flow",
           kind: "reactflow",
           title: "Family decision flow",
@@ -477,12 +504,27 @@ export const projects: Project[] = [
       "Coaches and families juggle separate tools for box scores, tryouts, practice plans, and teaching the game — none of them share context about the same player or team.",
     approach:
       "One platform where staff run the program and families follow along: stats and profiles stay tied to the same roster, development tools sit next to game data, and teaching moments do not require another subscription.",
-    engineering: [
-      "Public team and player profiles — schedules, stats, and progress families can actually follow.",
-      "Staff admin for roster, schedule, and program settings without re-entering the same names everywhere.",
-      "Evaluations and tryouts — structured scoring, draft boards, and player tracking across seasons.",
-      "Baseball IQ scenarios and Chalk Talk — situational teaching on an interactive diamond.",
-      "Practice library — plans, drills, and templates coaches can reuse week to week.",
+    solution: [
+      {
+        title: "Public profiles",
+        body: "Team and player profiles with schedules, stats, and progress families can actually follow.",
+      },
+      {
+        title: "Staff admin",
+        body: "Roster, schedule, and program settings without re-entering the same names everywhere.",
+      },
+      {
+        title: "Evaluations & tryouts",
+        body: "Structured scoring, draft boards, and player tracking across seasons.",
+      },
+      {
+        title: "Baseball IQ & Chalk Talk",
+        body: "Situational teaching on an interactive diamond.",
+      },
+      {
+        title: "Practice library",
+        body: "Plans, drills, and templates coaches can reuse week to week.",
+      },
     ],
     tags: ["Next.js", "Baseball", "Evaluations", "Coaching"],
     href: "https://stats.maketheplay.faith",
@@ -523,21 +565,30 @@ export const projects: Project[] = [
     },
   },
   {
-    slug: "vitable-warehouse",
+    slug: "gtm-revenue-warehouse",
     title: "GTM revenue warehouse",
     kind: "Solution",
     year: "2026",
     company: "Vitable Health",
     oneLiner:
-      "First Director of Data. Warehouse from zero. A shared revenue truth that GTM, CS, and Finance all use.",
+      "A greenfield warehouse built from zero into a shared revenue truth that GTM, CS, and Finance all use.",
     problem:
       "GTM, CS, and Finance were not looking at the same customer truth. BI lived in one tool, CRM dates and scores stayed trapped in another, and every team had its own spreadsheet version of reality.",
     approach:
       "Stand up a greenfield warehouse with shared models for renewal, expansion, and lead scoring. Make the warehouse the source of truth, then push clean signals back to the CRM so every team works from the same numbers.",
-    engineering: [
-      "Greenfield warehouse owned by a founding data seat.",
-      "Shared models for Revenue, CS, and Finance — not a shadow spreadsheet layer.",
-      "Lead scoring for the top-of-funnel team, written from warehouse signals.",
+    solution: [
+      {
+        title: "Greenfield warehouse",
+        body: "Built from zero by a founding data seat — no legacy migration, no shadow spreadsheet layer.",
+      },
+      {
+        title: "Shared revenue models",
+        body: "Renewal, expansion, and lead-scoring models that Revenue, CS, and Finance all query.",
+      },
+      {
+        title: "Signals back to the CRM",
+        body: "Warehouse-scored leads and dates pushed back so every team works from the same numbers.",
+      },
     ],
     tags: ["dbt", "Prefect", "Hightouch", "Lightdash"],
     visualizations: [
@@ -551,22 +602,34 @@ export const projects: Project[] = [
     ],
   },
   {
-    slug: "prizepicks-sports-gaming-dbt",
+    slug: "daily-fantasy-dbt-warehouse",
     title: "Daily fantasy sports dbt warehouse",
     kind: "Solution",
     year: "2022–2024",
     company: "PrizePicks",
     oneLiner:
-      "Original architect of the gaming model layer. Grew the analytics data team from zero to eight dbt-centered engineers.",
+      "The original dbt model layer for a high-growth gaming product — and the ownership patterns that scaled the team from zero to eight engineers.",
     problem:
       "A high-growth daily fantasy sports operator had no analytics engineering function and no shared semantics in the warehouse. Analysts and data scientists were rebuilding the same joins on terabyte-scale transactional data.",
     approach:
       "Design the core dbt model layer for the gaming product, onboard the team to dbt Cloud, and split ownership by domain as headcount grew. Stay hands-on as architect while engineers owned vertical slices.",
-    engineering: [
-      "Founding dbt architecture for daily-fantasy / sports-gaming analytics on BigQuery.",
-      "Onboarded new hires to dbt Cloud, tests, and model ownership patterns.",
-      "Scaled the data engineering bench from 0 to 8 engineers each owning a slice of company data.",
-      "120+ analytics-repo commits in a single month at peak velocity — KPI artifacts and DS enrichments shipping weekly.",
+    solution: [
+      {
+        title: "Founding dbt architecture",
+        body: "Core model layer for daily-fantasy analytics on BigQuery, designed before the first hire.",
+      },
+      {
+        title: "Team onboarding",
+        body: "New hires ramped on dbt Cloud, tests, and model ownership patterns.",
+      },
+      {
+        title: "Domain ownership at scale",
+        body: "The bench scaled from 0 to 8 engineers, each owning a vertical slice of company data.",
+      },
+      {
+        title: "Sustained velocity",
+        body: "120+ analytics-repo commits in a peak month — KPI artifacts and DS enrichments shipping weekly.",
+      },
     ],
     tags: ["dbt", "dbt Cloud", "BigQuery", "Team building"],
     visualizations: [
@@ -580,7 +643,7 @@ export const projects: Project[] = [
     ],
   },
   {
-    slug: "prizepicks-compliance-data-tiers",
+    slug: "compliance-data-tiers",
     title: "Compliance data tiers & GDPR pipelines",
     kind: "Solution",
     year: "2022–2024",
@@ -591,15 +654,38 @@ export const projects: Project[] = [
       "Regulatory compliance and finance audit needed governed retention on terabyte-scale transactions. A single warehouse tier could not balance realtime access, analytics freshness, and long-term archive with row-level PII controls.",
     approach:
       "Define a four-tier lifecycle modeled on Elasticsearch data tiers plus compliance requirements. Pair tier design with finance backup and retention pipelines, governed cold storage, and warehouse row-level PII access.",
-    engineering: [
-      "Hot tier: CDC, APIs, and warehouse raw for operational and near-realtime use.",
-      "Warm tier: dbt + Prefect models for analytics-ready tables.",
-      "Cold tier: read-only snapshots with governed access.",
-      "Frozen tier: retention/archive exports (CSV, Parquet, BigQuery) for compliance holds.",
-      "Finance backup and retention pipelines supporting GDPR obligations.",
+    solution: [
+      {
+        title: "Hot tier",
+        body: "CDC, APIs, and warehouse raw for operational and near-realtime use.",
+      },
+      {
+        title: "Warm tier",
+        body: "dbt and Prefect models — the analytics-ready layer teams query daily.",
+      },
+      {
+        title: "Cold tier",
+        body: "Read-only snapshots with governed access for finance and audit.",
+      },
+      {
+        title: "Frozen tier",
+        body: "Retention and archive exports (CSV, Parquet, BigQuery) for compliance holds.",
+      },
+      {
+        title: "GDPR pipelines",
+        body: "Finance backup and retention pipelines with row-level PII controls in the warehouse.",
+      },
     ],
     tags: ["GDPR", "BigQuery", "GCS", "Compliance", "PII"],
     visualizations: [
+      {
+        type: "reactflow",
+        title: "Lifecycle flow",
+        caption:
+          "Streaming sources through hot, warm, cold, and frozen tiers — governed reads for finance, retention exports for GDPR.",
+        chartId: "prizepicks-data-lifecycle",
+        height: 480,
+      },
       {
         type: "tiers",
         title: "Data lifecycle",
@@ -642,7 +728,7 @@ export const projects: Project[] = [
     ],
   },
   {
-    slug: "prizepicks-realtime-replication",
+    slug: "postgres-bigquery-replication",
     title: "Postgres → BigQuery realtime replication",
     kind: "Solution",
     year: "2023",
@@ -653,12 +739,27 @@ export const projects: Project[] = [
       "Analytics needed near-realtime copies of core Postgres tables while backfills had to stay reliable. Streaming state needed backup before destructive changes.",
     approach:
       "Build PySpark jobs on Dataproc for batch backfill and incremental reads, orchestrate continuous merge loops on Prefect with tiered GKE work queues. Evaluate Databricks for dedup at scale — recommend native Spark on Dataproc for cost and control.",
-    engineering: [
-      "Parameterized Dataproc Spark jobs: Postgres read, BigQuery merge, continuous realtime loop.",
-      "Prefect sub-flows per table with work pools from 2GB to 16GB by job profile.",
-      "Schema alignment across ingestion, Spark jobs, and dbt tests on core tables.",
-      "Go Cloud Function for payment file ingest — parse, clean, and stage for warehouse load.",
-      "Documented state-backup requirements before destructive replication changes.",
+    solution: [
+      {
+        title: "Parameterized Spark jobs",
+        body: "Postgres read, BigQuery merge, and a continuous realtime loop on Dataproc.",
+      },
+      {
+        title: "Tiered orchestration",
+        body: "Prefect sub-flows per table with GKE work pools from 2GB to 16GB by job profile.",
+      },
+      {
+        title: "Schema alignment",
+        body: "Ingestion, Spark jobs, and dbt tests kept in sync on core tables.",
+      },
+      {
+        title: "Payment file ingest",
+        body: "A Go Cloud Function to parse, clean, and stage payment files for warehouse load.",
+      },
+      {
+        title: "Safe state management",
+        body: "Documented state-backup requirements before destructive replication changes.",
+      },
     ],
     tags: ["Dataproc", "Spark", "Prefect", "GKE", "BigQuery", "Go"],
     visualizations: [
@@ -672,7 +773,7 @@ export const projects: Project[] = [
     ],
   },
   {
-    slug: "ltk-braze-marketing-data",
+    slug: "marketing-tag-deduplication",
     title: "Marketing tag data deduplication",
     kind: "Solution",
     year: "2024",
@@ -683,11 +784,23 @@ export const projects: Project[] = [
       "Tag-based tables were heavily inflated with duplicates from historical data modeling. Incremental loads kept compounding bad rows until marketing analytics on campaign and canvas tags was untrustworthy.",
     approach:
       "Trace lineage from upstream tables to find where duplicates entered, then change the Airflow-orchestrated downstream loads from incremental merge to full overwrite so row counts stay reliable for every consuming team.",
-    engineering: [
-      "Traced lineage from upstream sources through Airflow-orchestrated downstream loads to isolate where duplicates compounded.",
-      "Switched downstream tag tables from incremental merge to full overwrite, matching upstream refresh semantics.",
-      "Documented upstream vs downstream load behavior so the fix held for every consuming team.",
-      "Restored reliable row counts for marketing and customer-success analytics.",
+    solution: [
+      {
+        title: "Lineage first",
+        body: "Traced upstream sources through Airflow-orchestrated loads to isolate where duplicates compounded.",
+      },
+      {
+        title: "Full overwrite downstream",
+        body: "Tag tables switched from incremental merge to full overwrite, matching upstream refresh semantics.",
+      },
+      {
+        title: "Documented load behavior",
+        body: "Upstream vs downstream semantics written down so the fix held for every consuming team.",
+      },
+      {
+        title: "Trust restored",
+        body: "Reliable row counts for marketing and customer-success analytics.",
+      },
     ],
     tags: ["Braze", "Airflow", "Data quality"],
     visualizations: [
@@ -710,7 +823,7 @@ export const projects: Project[] = [
     ],
   },
   {
-    slug: "ltk-billing-medallion",
+    slug: "billing-medallion-migration",
     title: "Billing medallion architecture & orchestration migration",
     kind: "Solution",
     year: "2024",
@@ -721,12 +834,27 @@ export const projects: Project[] = [
       "A legacy orchestrator was being retired while billing and refunds data needed a medallion architecture. Change-data-capture tables behaved differently across environments, and new payment and refund tables needed merges, data-quality checks, and warehouse loads.",
     approach:
       "Migrate billing CDC pipelines to Airflow with custom SQL and primary-key tests. Deploy bronze-to-silver dedup for change-data-capture operations, then ship the refunds orchestration path to production.",
-    engineering: [
-      "Legacy orchestrator → Airflow cutover for billing change-data-capture pipelines with prod-safe table references.",
-      "Bronze, silver, and gold medallion buckets on S3 with Athena merges and Glue jobs.",
-      "Refunds orchestration deployed to production; Redshift load path validated.",
-      "Custom SQL + primary-key data-quality tests for the new Airflow patterns.",
-      "Environment-specific CDC behavior reconciled so dev and prod pipelines matched.",
+    solution: [
+      {
+        title: "Airflow cutover",
+        body: "Legacy orchestrator retired; billing CDC pipelines moved to Airflow with prod-safe table references.",
+      },
+      {
+        title: "Medallion on S3",
+        body: "Bronze, silver, and gold buckets with Athena merges and Glue jobs.",
+      },
+      {
+        title: "Refunds path to prod",
+        body: "Refunds orchestration deployed and the Redshift load path validated.",
+      },
+      {
+        title: "Data-quality gates",
+        body: "Custom SQL and primary-key tests for the new Airflow patterns.",
+      },
+      {
+        title: "Environment parity",
+        body: "CDC behavior reconciled so dev and prod pipelines matched.",
+      },
     ],
     tags: ["Airflow", "MWAA", "Athena", "Glue", "Redshift", "Medallion"],
     visualizations: [
@@ -740,51 +868,68 @@ export const projects: Project[] = [
     ],
   },
   {
-    slug: "dvx-agents",
-    title: "Agent + MCP stack for a venture portfolio",
+    slug: "agent-mcp-stack",
+    title: "Agent + MCP stack",
     kind: "Solution",
     year: "2024–2026",
     company: "DVx Ventures",
     oneLiner:
-      "Head of AI across 20+ portfolio companies. Agents, skills, and custom MCP on a dbt foundation.",
+      "Specialized agents with skills, structured memory, and custom MCP servers — all standing on a dbt foundation.",
     problem:
-      "Portfolio companies wanted agents that did real work. Early LLM memory drifted and hallucinated. Tools were missing or bolted on.",
+      "Teams want agents that do real work, but early LLM setups drift and hallucinate, and the tools agents need are missing or bolted on as an afterthought.",
     approach:
       "Design specialized skills and a memory structure that cut early hallucination. Build MCP servers so agents call live APIs. Stay in Terraform and Go instead of handing the last mile off.",
-    engineering: [
-      "Consulted data and AI work across 20+ portfolio companies.",
-      "Custom MCP servers, including the OpenAPI proxy later released as open source.",
-      "Hands-on leadership: IC tickets when teams blocked, plus the seat that scales a function.",
+    solution: [
+      {
+        title: "Skills & memory structure",
+        body: "Specialized skills and a memory layout that cut early hallucination and drift.",
+      },
+      {
+        title: "Custom MCP servers",
+        body: "Agents call live APIs through purpose-built MCP servers — including the OpenAPI proxy later released as open source.",
+      },
+      {
+        title: "Hands-on to the last mile",
+        body: "Terraform and Go in production, plus IC tickets when a team is blocked.",
+      },
     ],
     tags: ["Agents", "MCP", "Go", "Terraform"],
     visualizations: [
       {
-        type: "metrics",
-        title: "Portfolio scope",
-        items: [
-          { label: "Companies advised", value: "20+" },
-          { label: "Custom MCP servers", value: "Multiple", detail: "Live API tools for agents" },
-          { label: "Open-sourced", value: "1", detail: "MCP OpenAPI Proxy in Go" },
-        ],
+        type: "reactflow",
+        title: "Agent stack",
+        caption:
+          "A dbt foundation, skills, and memory feed the agent runtime; MCP servers turn live APIs into tools.",
+        chartId: "dvx-agent-stack",
+        height: 480,
       },
     ],
   },
   {
-    slug: "cork-threat-detection",
+    slug: "realtime-threat-detection",
     title: "Realtime threat-detection pipelines",
     kind: "Solution",
     year: "2023–2025",
     company: "Cork",
     oneLiner:
-      "First staff data engineer. Warehouse and lake on GCP and AWS. Realtime risk scoring for an MSP warranty product.",
+      "A multi-cloud warehouse and lake with realtime threat and risk scoring for an MSP warranty product.",
     problem:
       "An MSP cybersecurity product needed realtime threat and risk signals. There was no warehouse, no lake, and no data standards.",
     approach:
       "Stand up multi-cloud warehouse and lake. Stream telemetry plus public and private sources. Treat production quality as an engineering contract, not a later cleanup.",
-    engineering: [
-      "Realtime pipelines for AI threat detection and risk scoring.",
-      "Ingest from telemetry and mixed public/private sources into the analytical store.",
-      "Data standards shared with engineering so quality was not a side project.",
+    solution: [
+      {
+        title: "Realtime risk scoring",
+        body: "Streaming pipelines for AI threat detection and risk scoring.",
+      },
+      {
+        title: "Mixed-source ingest",
+        body: "Telemetry plus public and private OSINT into one analytical store.",
+      },
+      {
+        title: "Quality as a contract",
+        body: "Data standards shared with engineering so quality was not a side project.",
+      },
     ],
     tags: ["GCP", "AWS", "Realtime", "Cybersecurity"],
     visualizations: [
@@ -798,21 +943,30 @@ export const projects: Project[] = [
     ],
   },
   {
-    slug: "mantl-streaming-looker",
+    slug: "streaming-embedded-analytics",
     title: "Streaming warehouse + embedded analytics product",
     kind: "Solution",
     year: "2019–2023",
     company: "MANTL",
     oneLiner:
-      "AWS-to-GCP migration, then Principal Data Engineer. Postgres to BigQuery in realtime. Embedded Looker sold to banks.",
+      "AWS-to-GCP migration, realtime Postgres-to-BigQuery streaming, and an embedded Looker product sold to banks.",
     problem:
       "A multi-tenant fintech needed a real data product, not a warehouse nobody opened. The company also had to leave AWS for GCP without stalling shipping.",
     approach:
-      "Lead the cloud migration as Staff DevOps / SRE. Then own data architecture: stream transactional Postgres into BigQuery and ship an embedded Looker offering.",
-    engineering: [
-      "Terraform for IAM, networking, compute, Glue, and S3. CI/CD so product and data teams could ship.",
-      "Realtime transactional pipeline from Postgres to BigQuery.",
-      "Embedded Looker product for bank and credit union clients.",
+      "Migrate clouds without stalling shipping, then stream transactional Postgres into BigQuery and ship an embedded Looker offering as a real data product.",
+    solution: [
+      {
+        title: "Cloud migration",
+        body: "AWS to GCP with Terraform for IAM, networking, compute, Glue, and S3 — CI/CD so product and data teams kept shipping.",
+      },
+      {
+        title: "Realtime replication",
+        body: "Transactional Postgres streamed into BigQuery.",
+      },
+      {
+        title: "Embedded analytics product",
+        body: "A Looker embedded offering sold to bank and credit union clients.",
+      },
     ],
     tags: ["BigQuery", "Looker", "Terraform", "AWS→GCP"],
     visualizations: [

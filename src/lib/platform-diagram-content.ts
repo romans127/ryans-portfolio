@@ -38,17 +38,6 @@ export const MERMAID_CHARTS: Record<string, string> = {
     Typing --> Control
     Writing --> Control`,
 
-  "rr-review-structure": `flowchart LR
-    Search["Search library"]
-    Title["Title page"]
-    Flags["Content flags<br/>violence · language · themes"]
-    Values["Values notes"]
-    Chip["Guidance chip"]
-    Search --> Title --> Flags --> Values --> Chip
-    Chip --> Great["Great for families"]
-    Chip --> Guide["With guidance"]
-    Chip --> No["Not recommended"]`,
-
   "sh-development-pillars": `flowchart TB
     Hub["Stats Hub<br/>Player development"]
     Knowledge["Knowledge<br/>Baseball IQ · Chalk Talk"]
@@ -143,16 +132,54 @@ export const FLOW_CHARTS: Record<string, { nodes: Node[]; edges: Edge[] }> = {
       flowNode("hs", "HubSpot", 0, 80, "copper"),
       flowNode("dbt", "dbt models", 260, 80, "signal"),
       flowNode("ld", "Lightdash", 520, 80, "signal"),
-      flowNode("ht", "Hightouch", 780, 80, "copper"),
+      flowNode("pipes", "Pipelines", 780, 80, "copper"),
       flowNode("rev", "Revenue team", 520, 200, "neutral"),
       flowNode("cs", "CS team", 780, 200, "neutral"),
     ],
     edges: [
       flowEdge("hs", "dbt", "sync"),
       flowEdge("dbt", "ld", "serve"),
-      flowEdge("ld", "ht", "reverse ETL"),
+      flowEdge("ld", "pipes", "ETL"),
       flowEdge("ld", "rev", "forecast"),
       flowEdge("ld", "cs", "health"),
+    ],
+  },
+
+  "dvx-agent-stack": {
+    nodes: [
+      flowNode("dbt", "dbt foundation", 0, 100, "signal"),
+      flowNode("skills", "Skills library", 260, 0, "copper"),
+      flowNode("memory", "Memory structure", 260, 200, "copper"),
+      flowNode("agents", "Agent runtime", 520, 100, "signal"),
+      flowNode("mcp", "MCP servers", 780, 100, "copper"),
+      flowNode("apis", "Live APIs", 1040, 100, "neutral"),
+    ],
+    edges: [
+      flowEdge("dbt", "agents", "trusted context"),
+      flowEdge("skills", "agents", "specialize"),
+      flowEdge("memory", "agents", "recall"),
+      flowEdge("agents", "mcp", "tool calls"),
+      flowEdge("mcp", "apis", "live calls"),
+    ],
+  },
+
+  "prizepicks-data-lifecycle": {
+    nodes: [
+      flowNode("cdc", "CDC & APIs", 0, 100, "copper"),
+      flowNode("hot", "Hot tier", 260, 100, "signal"),
+      flowNode("warm", "Warm tier<br/>dbt + Prefect", 520, 100, "signal"),
+      flowNode("cold", "Cold tier<br/>snapshots", 780, 100, "copper"),
+      flowNode("frozen", "Frozen tier<br/>retention exports", 1040, 100, "neutral"),
+      flowNode("finance", "Finance & audit", 780, 220, "neutral"),
+      flowNode("gdpr", "GDPR holds", 1040, 220, "neutral"),
+    ],
+    edges: [
+      flowEdge("cdc", "hot", "stream"),
+      flowEdge("hot", "warm", "model"),
+      flowEdge("warm", "cold", "snapshot"),
+      flowEdge("cold", "frozen", "export"),
+      flowEdge("cold", "finance", "governed read"),
+      flowEdge("frozen", "gdpr", "retention"),
     ],
   },
 
