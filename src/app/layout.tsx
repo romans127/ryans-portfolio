@@ -6,6 +6,7 @@ import Atmosphere from "@/components/Atmosphere";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import SmoothScroll from "@/components/SmoothScroll";
+import { CSPostHogProvider } from "@/app/providers";
 import { profile } from "@/lib/site";
 
 const sans = Outfit({
@@ -65,14 +66,16 @@ export default function RootLayout({
   return (
     <html lang="en" data-scroll-behavior="smooth" className={`${sans.variable} ${display.variable} ${mono.variable}`}>
       <body className="flex min-h-screen flex-col font-sans">
-        <Atmosphere />
-        <SmoothScroll>
-          <div className="site-shell flex min-h-screen flex-col">
-            <Nav />
-            <main className="flex-1">{children}</main>
-            <Footer />
-          </div>
-        </SmoothScroll>
+        <CSPostHogProvider>
+          <Atmosphere />
+          <SmoothScroll>
+            <div className="site-shell flex min-h-screen flex-col">
+              <Nav />
+              <main className="flex-1">{children}</main>
+              <Footer />
+            </div>
+          </SmoothScroll>
+        </CSPostHogProvider>
       </body>
     </html>
   );
