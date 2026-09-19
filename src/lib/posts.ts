@@ -1,3 +1,5 @@
+import { platformEquivalentsContent } from "@/content/platform-equivalents";
+
 export interface Post {
   slug: string;
   title: string;
@@ -9,6 +11,17 @@ export interface Post {
 }
 
 export const posts: Post[] = [
+  {
+    slug: "data-platform-equivalents-across-six-vendors",
+    title:
+      "Every Data Platform Maps to Every Other One: Databricks, Snowflake, dbt, and the Big Three",
+    excerpt:
+      "Ten functional categories, six platforms, one diagram per category showing all six flows on the same spine — plus the renames that quietly dated everything you learned in 2024.",
+    date: "September 18, 2026",
+    readTime: "18 min",
+    tag: "Data Architecture",
+    content: platformEquivalentsContent,
+  },
   {
     slug: "agentic-ai-architecture-patterns",
     title: "Agentic AI Architecture Patterns for the Enterprise",

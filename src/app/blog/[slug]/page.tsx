@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, Clock } from "lucide-react";
+import PostBody from "@/components/blog/PostBody";
 import { getAllPosts, getPost } from "@/lib/posts";
 import { profile } from "@/lib/site";
 
@@ -21,10 +22,6 @@ export default async function PostPage({
   }
 
   const related = getAllPosts().filter((item) => item.slug !== slug).slice(0, 2);
-  const paragraphs = post.content
-    .trim()
-    .split("\n")
-    .filter((line) => line.trim() !== "");
 
   return (
     <div className="mx-auto max-w-4xl space-y-12 px-6 py-16">
@@ -56,50 +53,7 @@ export default async function PostPage({
         </div>
       </header>
 
-      <article className="space-y-6">
-        {paragraphs.map((line, index) => {
-          if (line.startsWith("## ")) {
-            return (
-              <h2 key={index} className="display mt-10 text-2xl text-cream md:text-3xl">
-                {line.replace("## ", "")}
-              </h2>
-            );
-          }
-          if (line.startsWith("**") && line.endsWith("**")) {
-            return (
-              <p key={index} className="text-base font-medium text-cream md:text-lg">
-                {line.replace(/\*\*/g, "")}
-              </p>
-            );
-          }
-          if (line.startsWith("- ")) {
-            return (
-              <div key={index} className="flex gap-3 text-base leading-relaxed text-stone md:text-lg">
-                <span className="mt-1 text-signal">▹</span>
-                <span
-                  dangerouslySetInnerHTML={{
-                    __html: line
-                      .replace("- ", "")
-                      .replace(/\*\*([^*]+)\*\*/g, '<strong class="text-cream">$1</strong>'),
-                  }}
-                />
-              </div>
-            );
-          }
-          return (
-            <p
-              key={index}
-              className="text-base leading-[1.75] text-stone md:text-lg"
-              dangerouslySetInnerHTML={{
-                __html: line.replace(
-                  /\*\*([^*]+)\*\*/g,
-                  '<strong class="text-cream">$1</strong>',
-                ),
-              }}
-            />
-          );
-        })}
-      </article>
+      <PostBody content={post.content} />
 
       <div className="panel flex items-start gap-4 rounded-2xl p-6 md:p-8">
         <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-copper to-signal text-sm text-ink">
